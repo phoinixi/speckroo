@@ -42,10 +42,10 @@ const TOOLS = {
   opencode: {
     label: "OpenCode",
     agents: { dir: ".opencode/agents", ext: ".md", fm: openCodeAgentFM },
-    commands: { dir: ".opencode/commands", ext: ".md", fm: openCodeCmdFM },
+    commands: { dir: ".opencode/commands/speckroo", ext: ".md", fm: openCodeCmdFM },
     global: {
       agents: { dir: "~/.config/opencode/agents", ext: ".md", fm: openCodeAgentFM },
-      commands: { dir: "~/.config/opencode/commands", ext: ".md", fm: openCodeCmdFM },
+      commands: { dir: "~/.config/opencode/commands/speckroo", ext: ".md", fm: openCodeCmdFM },
     },
   },
   copilot: {
