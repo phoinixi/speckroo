@@ -1,0 +1,10 @@
+# Runtime pointer set by /discover when squad is used on itself — local state
+.framework/.active-feature
+
+# CLI-generated vendored output (duplicates core/ and squad/.framework/)
+.framework/personas/
+.framework/templates/
+.framework/workflow.md
+
+# OS / editor noise
+.DS_Store

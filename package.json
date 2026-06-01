@@ -1,0 +1,21 @@
+{
+  "name": "squad-framework",
+  "version": "0.1.0",
+  "description": "Spec-driven multi-agent dev framework. One command sets it up for Claude Code, OpenCode, Copilot, Cursor, Windsurf, Codex, and any AGENTS.md tool.",
+  "type": "module",
+  "bin": {
+    "squad": "bin/squad.mjs"
+  },
+  "files": [
+    "bin",
+    "core",
+    "squad/.framework",
+    "AGENTS.md"
+  ],
+  "keywords": ["spec-driven", "multi-agent", "workflow", "agents", "claude", "opencode", "copilot", "cursor", "windsurf", "codex"],
+  "license": "MIT",
+  "author": "phoinixi",
+  "homepage": "https://github.com/phoinixi/squad",
+  "repository": { "type": "git", "url": "https://github.com/phoinixi/squad" },
+  "engines": { "node": ">=18" }
+}

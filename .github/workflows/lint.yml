@@ -1,0 +1,55 @@
+name: lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate JSON manifests
+        run: |
+          jq . .claude-plugin/marketplace.json > /dev/null
+          jq . squad/.claude-plugin/plugin.json > /dev/null
+          jq . package.json > /dev/null
+          echo "manifests OK"
+
+      - name: Assert every template keeps its gate line
+        run: |
+          missing=$(grep -rL '> Status: draft' squad/.framework/templates || true)
+          if [ -n "$missing" ]; then
+            echo "::error::Templates missing the '> Status: draft' gate line:"; echo "$missing"; exit 1
+          fi
+          echo "templates retain the gate line"
+
+      - name: Assert Claude plugin personas match core canon
+        run: |
+          get_body() { awk 'NR==1&&/^---/{f=1;next} f&&/^---/{f=0;next} !f' "$1" | sed '/./,$!d'; }
+          fail=0
+          for name in product-manager product-designer monetization-strategist software-engineer; do
+            a=$(get_body "squad/agents/$name.md")
+            b=$(sed '/./,$!d' "core/personas/$name.body.md")
+            if [ "$a" != "$b" ]; then
+              echo "::error::squad/agents/$name.md body has drifted from core/personas/$name.body.md"
+              fail=1
+            fi
+          done
+          [ "$fail" = 0 ] && echo "all personas in sync with core"
+          exit $fail
+
+      - name: CLI smoke test (generates for every tool)
+        run: |
+          node --check bin/squad.mjs
+          for t in opencode copilot cursor windsurf codex; do
+            d=$(mktemp -d)
+            (cd "$d" && node "$GITHUB_WORKSPACE/bin/squad.mjs" setup "$t" > /dev/null)
+            test -d "$d/.framework/templates" || { echo "::error::$t: .framework not scaffolded"; exit 1; }
+            echo "  $t ✓"
+          done
+          echo "CLI generates cleanly for all tools"

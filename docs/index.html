@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>squad — spec-driven dev with four agents, and you in the loop</title>
+<meta name="description" content="squad is a reusable, project-agnostic multi-agent development framework for Claude Code, OpenCode, Copilot, Cursor, Windsurf, Codex, and any AGENTS.md tool. Spec → design → plan → build, with you approving every phase.">
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --line: #232a33;
+    --fg: #e6edf3; --muted: #9aa7b4; --accent: #4ade80; --accent-ink: #03110a;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#ffffff; --panel:#f6f8fa; --line:#d0d7de; --fg:#1f2328; --muted:#59636e; --accent:#1a7f37; --accent-ink:#ffffff; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--sans); line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  main { max-width: 780px; margin: 0 auto; padding: 0 20px 80px; }
+  header.top {
+    max-width: 780px; margin: 0 auto; padding: 28px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .wordmark { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; letter-spacing: -.02em; }
+  .wordmark::before { content: "/"; color: var(--accent); }
+  .ghlink {
+    font-family: var(--mono); font-size: .85rem; text-decoration: none;
+    border: 1px solid var(--line); padding: 6px 12px; border-radius: 8px; color: var(--fg);
+  }
+  .ghlink:hover { border-color: var(--accent); }
+  .hero { padding: 40px 0 8px; }
+  .hero h1 { font-size: clamp(2rem, 6vw, 3.1rem); line-height: 1.1; margin: 0 0 16px; letter-spacing: -.03em; }
+  .hero h1 .hl { color: var(--accent); }
+  .hero p.sub { font-size: 1.15rem; color: var(--muted); margin: 0 0 24px; max-width: 60ch; }
+  .works { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 10px; }
+  .tools { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 12px; }
+  .tools li { font-family: var(--mono); font-size: .82rem; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; color: var(--fg); }
+  .tools li.any { background: transparent; border-style: dashed; color: var(--muted); }
+  .tools li.any code { font-family: var(--mono); font-size: .82rem; }
+  .badges { font-family: var(--mono); font-size: .78rem; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+  section { padding: 44px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 1.4rem; letter-spacing: -.02em; margin: 0 0 6px; }
+  h2 .num { font-family: var(--mono); color: var(--accent); font-size: .9rem; margin-right: 8px; }
+  section > p.lead { color: var(--muted); margin: 0 0 22px; }
+  .install { display: grid; gap: 10px; }
+  .cmd {
+    display: flex; align-items: center; gap: 10px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px;
+    font-family: var(--mono); font-size: .9rem;
+  }
+  .cmd code { overflow-x: auto; white-space: nowrap; flex: 1; }
+  .cmd .prompt { color: var(--accent); user-select: none; }
+  .copy {
+    font-family: var(--mono); font-size: .72rem; cursor: pointer; color: var(--muted);
+    background: transparent; border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px;
+  }
+  .copy:hover { color: var(--fg); border-color: var(--accent); }
+  .copy:focus-visible, .ghlink:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .note { color: var(--muted); font-size: .9rem; margin-top: 14px; }
+  .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+  .step { flex: 1 1 120px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+  .step .ph { font-family: var(--mono); font-weight: 700; font-size: .9rem; }
+  .step .ph .slash { color: var(--accent); }
+  .step .out { font-size: .8rem; color: var(--muted); margin-top: 4px; }
+  .step.opt { border-style: dashed; }
+  .gateline { font-family: var(--mono); font-size: .82rem; color: var(--muted); margin-top: 16px; padding: 10px 14px; background: var(--panel); border-radius: 8px; border: 1px solid var(--line); }
+  .gateline b { color: var(--accent); }
+  .agents { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .agent { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .agent h3 { margin: 0 0 4px; font-size: 1rem; }
+  .agent .owns { color: var(--muted); font-size: .88rem; margin: 0 0 10px; }
+  .agent .art { font-family: var(--mono); font-size: .78rem; color: var(--accent); }
+  .why { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 18px 20px; }
+  .why p { margin: 0; color: var(--fg); }
+  footer { max-width: 780px; margin: 0 auto; padding: 32px 20px 60px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); }
+  footer a { color: var(--muted); text-decoration: underline; }
+  @media (max-width: 560px) { .agents { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="wordmark">squad</span>
+  <a class="ghlink" href="https://github.com/phoinixi/squad">GitHub →</a>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="badges">
+      <span>multi-tool</span><span>·</span><span>MIT</span><span>·</span><span>zero-config</span>
+    </div>
+    <h1>Spec-driven dev with <span class="hl">four agents</span>, and you in the loop.</h1>
+    <p class="sub">squad is a reusable, project-agnostic development framework. A product manager, designer, monetization strategist, and engineer hand off through reviewable Markdown artifacts — and no phase moves forward until <em>you</em> approve it.</p>
+    <p class="works">Runs in</p>
+    <ul class="tools">
+      <li>Claude Code</li>
+      <li>OpenCode</li>
+      <li>Copilot CLI</li>
+      <li>Cursor</li>
+      <li>Windsurf</li>
+      <li>Codex</li>
+      <li class="any">+ any <code>AGENTS.md</code> tool</li>
+    </ul>
+  </div>
+
+  <section id="install">
+    <h2><span class="num">01</span>Install</h2>
+    <p class="lead">Works in Claude Code, OpenCode, Copilot CLI, Cursor, Windsurf, Codex — and any <code style="font-family:var(--mono)">AGENTS.md</code> tool. One canonical source, projected into each.</p>
+
+    <p class="note" style="margin-top:0"><strong style="color:var(--fg)">Claude Code</strong> — native plugin:</p>
+    <div class="install">
+      <div class="cmd"><span class="prompt">&gt;</span><code id="c1">/plugin marketplace add phoinixi/squad</code><button class="copy" data-target="c1" type="button">copy</button></div>
+      <div class="cmd"><span class="prompt">&gt;</span><code id="c2">/plugin install squad@squad</code><button class="copy" data-target="c2" type="button">copy</button></div>
+    </div>
+
+    <p class="note"><strong style="color:var(--fg)">Every other tool</strong> — one command in your project:</p>
+    <div class="install">
+      <div class="cmd"><span class="prompt">$</span><code id="c3">npx squad-framework setup opencode</code><button class="copy" data-target="c3" type="button">copy</button></div>
+    </div>
+    <p class="note">Swap <code style="font-family:var(--mono)">opencode</code> for <code style="font-family:var(--mono)">copilot</code>, <code style="font-family:var(--mono)">cursor</code>, <code style="font-family:var(--mono)">windsurf</code>, or <code style="font-family:var(--mono)">codex</code>. Then run the <code style="font-family:var(--mono)">init-framework</code> step and start with <code style="font-family:var(--mono)">discover &lt;idea&gt;</code>.</p>
+  </section>
+
+  <section id="workflow">
+    <h2><span class="num">02</span>The workflow</h2>
+    <p class="lead">Five phases. Each is one slash command. Nothing auto-chains.</p>
+    <div class="flow">
+      <div class="step"><div class="ph"><span class="slash">/</span>discover</div><div class="out">→ spec.md</div></div>
+      <div class="step"><div class="ph"><span class="slash">/</span>design</div><div class="out">→ design.md</div></div>
+      <div class="step opt"><div class="ph"><span class="slash">/</span>monetize</div><div class="out">→ monetization.md · optional</div></div>
+      <div class="step"><div class="ph"><span class="slash">/</span>plan</div><div class="out">→ plan.md + tasks.md</div></div>
+      <div class="step"><div class="ph"><span class="slash">/</span>build</div><div class="out">→ code, one task at a time</div></div>
+    </div>
+    <p class="gateline">Between every phase you review the artifact and run <b>/approve</b> — which flips its <b>Status: draft</b> line to <b>approved</b>. The next phase refuses to run until it does.</p>
+  </section>
+
+  <section id="agents">
+    <h2><span class="num">03</span>The four agents</h2>
+    <p class="lead">One owner per phase. Each writes only its own artifact.</p>
+    <div class="agents">
+      <div class="agent"><h3>Product Manager</h3><p class="owns">Requirements, scope, priorities, success metrics.</p><span class="art">spec.md</span></div>
+      <div class="agent"><h3>Product Designer</h3><p class="owns">UX, user flows, design specs.</p><span class="art">design.md</span></div>
+      <div class="agent"><h3>Monetization Strategist</h3><p class="owns">Pricing, business model, revenue. Optional.</p><span class="art">monetization.md</span></div>
+      <div class="agent"><h3>Software Engineer</h3><p class="owns">Architecture, plan, task breakdown, code.</p><span class="art">plan.md · tasks.md · code</span></div>
+    </div>
+  </section>
+
+  <section id="why">
+    <h2><span class="num">04</span>Why four agents, not one?</h2>
+    <div class="why">
+      <p>A single mega-agent loses the thread across a long build. squad's agents hand off through files in <code style="font-family:var(--mono)">.framework/</code>, not chat history — so context persists across phases, each role stays tight and accountable, and you have a reviewable paper trail at every checkpoint. This very site was built by running squad on itself; the artifacts live in <code style="font-family:var(--mono)">.framework/squad-docs/</code>.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p><span class="wordmark">squad</span> · MIT licensed.</p>
+</footer>
+
+<script>
+  // Progressive enhancement: copy buttons. Command text is always selectable without JS.
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.dataset.target);
+      navigator.clipboard.writeText(el.textContent).then(function () {
+        var prev = btn.textContent; btn.textContent = 'copied';
+        setTimeout(function () { btn.textContent = prev; }, 1200);
+      });
+    });
+  });
+</script>
+</body>
+</html>
