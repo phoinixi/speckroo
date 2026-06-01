@@ -16,13 +16,13 @@ jobs:
       - name: Validate JSON manifests
         run: |
           jq . .claude-plugin/marketplace.json > /dev/null
-          jq . squad/.claude-plugin/plugin.json > /dev/null
+          jq . speckroo/.claude-plugin/plugin.json > /dev/null
           jq . package.json > /dev/null
           echo "manifests OK"
 
       - name: Assert every template keeps its gate line
         run: |
-          missing=$(grep -rL '> Status: draft' squad/.framework/templates || true)
+          missing=$(grep -rL '> Status: draft' speckroo/.framework/templates || true)
           if [ -n "$missing" ]; then
             echo "::error::Templates missing the '> Status: draft' gate line:"; echo "$missing"; exit 1
           fi
@@ -33,10 +33,10 @@ jobs:
           get_body() { awk 'NR==1&&/^---/{f=1;next} f&&/^---/{f=0;next} !f' "$1" | sed '/./,$!d'; }
           fail=0
           for name in product-manager product-designer monetization-strategist software-engineer; do
-            a=$(get_body "squad/agents/$name.md")
+            a=$(get_body "speckroo/agents/$name.md")
             b=$(sed '/./,$!d' "core/personas/$name.body.md")
             if [ "$a" != "$b" ]; then
-              echo "::error::squad/agents/$name.md body has drifted from core/personas/$name.body.md"
+              echo "::error::speckroo/agents/$name.md body has drifted from core/personas/$name.body.md"
               fail=1
             fi
           done
@@ -45,10 +45,10 @@ jobs:
 
       - name: CLI smoke test (generates for every tool)
         run: |
-          node --check bin/squad.mjs
+          node --check bin/speckroo.mjs
           for t in opencode copilot cursor windsurf codex; do
             d=$(mktemp -d)
-            (cd "$d" && node "$GITHUB_WORKSPACE/bin/squad.mjs" setup "$t" > /dev/null)
+            (cd "$d" && node "$GITHUB_WORKSPACE/bin/speckroo.mjs" setup "$t" > /dev/null)
             test -d "$d/.framework/templates" || { echo "::error::$t: .framework not scaffolded"; exit 1; }
             echo "  $t ✓"
           done

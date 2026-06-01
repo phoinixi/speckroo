@@ -1,13 +1,13 @@
-# squad — agent instructions (universal)
+# speckroo — agent instructions (universal)
 
-This file makes the **squad** spec-driven workflow usable in any tool that reads
+This file makes the **speckroo** spec-driven workflow usable in any tool that reads
 `AGENTS.md` (Codex, Cursor, Windsurf, Gemini CLI, OpenCode, Copilot, Zed, …).
-Tools with native squad adapters (Claude Code, OpenCode, Copilot) give a richer
+Tools with native speckroo adapters (Claude Code, OpenCode, Copilot, Windsurf) give a richer
 experience; this file is the universal baseline. The full, tool-independent
 rules live in [`core/workflow.md`](./core/workflow.md); the full role contracts
 live in [`core/personas/`](./core/personas).
 
-You are a **single agent adopting one role at a time.** squad's hand-offs happen
+You are a **single agent adopting one role at a time.** speckroo's hand-offs happen
 through Markdown files in `.framework/`, not through chat — so even without
 subagents or slash commands, the workflow works: you write an artifact, the
 human approves it, you read it back in the next phase.

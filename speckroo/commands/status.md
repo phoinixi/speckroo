@@ -34,4 +34,4 @@ Example output:
 Read-only. This command never edits artifacts.
 
 _When you name the suggested next command, match the namespace you were invoked
-with (e.g. `/squad:plan` if installed as a plugin)._
+with (e.g. `/speckroo:plan` if installed as a plugin)._

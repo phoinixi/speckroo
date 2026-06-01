@@ -1,6 +1,6 @@
-# Contributing to squad
+# Contributing to speckroo
 
-squad has **one canonical source** (`core/`) projected into every tool. It's
+speckroo has **one canonical source** (`core/`) projected into every tool. It's
 Markdown + JSON + a tiny Node CLI. **Edit roles and commands in `core/` — never
 in a generated adapter.**
 
@@ -11,20 +11,20 @@ core/                             ← THE source of truth — edit here
   personas/*.body.md             4 role prompts (no frontmatter)
   commands/*.md                  8 tool-agnostic command bodies
   workflow.md                    gate / phase / routing contract
-bin/squad.mjs                    CLI: projects core/ into a tool's layout
-package.json                     `npx github:phoinixi/squad setup <tool>`
+bin/speckroo.mjs                    CLI: projects core/ into a tool's layout
+package.json                     `npx github:phoinixi/speckroo setup <tool>`
 AGENTS.md                        universal zero-install driver
 .claude-plugin/marketplace.json  Claude Code marketplace catalog
-squad/                           Claude Code plugin (native channel)
+speckroo/                           Claude Code plugin (native channel)
   .claude-plugin/plugin.json     bump version on release
   agents/                        CC personas — bodies MUST equal core/ (CI-checked)
   commands/                      CC commands (Task-tool dispatch)
   .framework/{constitution.md, templates/}   masters the CLI vendors
 docs/                            zero-build GitHub Pages site
-.framework/squad-docs/           squad's own design record (worked example)
+.framework/speckroo-docs/           speckroo's own design record (worked example)
 ```
 
-Per-tool knowledge (file paths + frontmatter) lives only in `bin/squad.mjs`.
+Per-tool knowledge (file paths + frontmatter) lives only in `bin/speckroo.mjs`.
 Add a new tool by adding one entry to its `TOOLS` map — no new persona/command
 copies.
 
@@ -35,7 +35,7 @@ copies.
 2. **One owner per artifact.** Each agent writes only its own file and never
    edits another phase's artifact.
 3. **Every template keeps its gate line.** Each file in
-   `squad/.framework/templates/` must contain a `> Status: draft` line — the
+   `speckroo/.framework/templates/` must contain a `> Status: draft` line — the
    `/approve` command flips it to `approved`, and the phase gates check for it.
    CI fails if a template loses this line.
 4. **Agents never self-approve.** Only the human, via `/approve`, sets a
@@ -46,31 +46,31 @@ copies.
 ## Making a change
 
 1. Fork and branch.
-2. Edit the role/command in **`core/`** (and the matching `squad/agents/` copy
+2. Edit the role/command in **`core/`** (and the matching `speckroo/agents/` copy
    for the Claude plugin — CI checks they're equal). Keep prompts tight.
 3. Validate locally (same checks as CI):
    ```sh
-   jq . .claude-plugin/marketplace.json squad/.claude-plugin/plugin.json package.json
-   grep -rL '> Status: draft' squad/.framework/templates   # should print nothing
-   node --check bin/squad.mjs
-   ( cd "$(mktemp -d)" && node "$OLDPWD/bin/squad.mjs" setup opencode )  # smoke test
+   jq . .claude-plugin/marketplace.json speckroo/.claude-plugin/plugin.json package.json
+   grep -rL '> Status: draft' speckroo/.framework/templates   # should print nothing
+   node --check bin/speckroo.mjs
+   ( cd "$(mktemp -d)" && node "$OLDPWD/bin/speckroo.mjs" setup opencode )  # smoke test
    ```
 4. If you changed behavior, add a `CHANGELOG.md` entry.
-5. Open a PR. Squad's own workflow (`.framework/squad-docs/`) is a good example
+5. Open a PR. Speckroo's own workflow (`.framework/speckroo-docs/`) is a good example
    of the spec→plan→tasks rigor we like in non-trivial changes.
 
 ## Testing changes
 
 **Claude Code plugin:** install your local copy in a throwaway project —
-`/plugin marketplace add ~/path/to/your/clone`, `/plugin install squad@squad` —
-then walk `/squad:init-framework` → `/squad:discover` → `/squad:approve` →
-`/squad:design` … and confirm each gate behaves.
+`/plugin marketplace add ~/path/to/your/clone`, `/plugin install speckroo@speckroo` —
+then walk `/speckroo:init-framework` → `/speckroo:discover` → `/speckroo:approve` →
+`/speckroo:design` … and confirm each gate behaves.
 
 **Other tools:** `cd` into a throwaway project and run
-`node ~/path/to/clone/bin/squad.mjs setup <tool>`; open it in that tool and walk
+`node ~/path/to/clone/bin/speckroo.mjs setup <tool>`; open it in that tool and walk
 the same flow.
 
 ## Releases
 
-Bump `version` in `squad/.claude-plugin/plugin.json`, add a `CHANGELOG.md`
+Bump `version` in `speckroo/.claude-plugin/plugin.json`, add a `CHANGELOG.md`
 entry, then tag (`git tag v0.x.0 && git push --tags`).

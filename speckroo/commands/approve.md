@@ -31,4 +31,4 @@ Do NOT approve on the agent's behalf or without explicit human say-so. Do NOT
 run the next phase yourself.
 
 _When you name the next command, match the namespace you were invoked with
-(e.g. `/squad:design` if installed as a plugin)._
+(e.g. `/speckroo:design` if installed as a plugin)._

@@ -1,9 +1,9 @@
 {
-  "name": "squad",
+  "name": "speckroo",
   "version": "0.1.0",
   "description": "Multi-agent product dev workflow (PM, designer, monetization, engineer) with human approval gates between phases.",
   "author": { "name": "phoinixi" },
-  "homepage": "https://github.com/phoinixi/squad",
+  "homepage": "https://github.com/phoinixi/speckroo",
   "license": "MIT",
   "keywords": ["spec-driven", "multi-agent", "workflow", "product", "claude-code"]
 }

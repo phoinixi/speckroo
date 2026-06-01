@@ -30,4 +30,4 @@ human to review `spec.md` and run `/approve spec` when satisfied — then
 `/design`.
 
 _When you name follow-up commands, match the namespace you were invoked with
-(e.g. `/squad:approve` if installed as a plugin)._
+(e.g. `/speckroo:approve` if installed as a plugin)._

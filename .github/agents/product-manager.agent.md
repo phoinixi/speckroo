@@ -1,6 +1,6 @@
 ---
 name: product-manager
-description: squad — Owns requirements, scope, priorities, success metrics. Drafts spec.md.
+description: speckroo — Owns requirements, scope, priorities, success metrics. Drafts spec.md.
 tools: ['read', 'write', 'edit', 'search']
 ---
 

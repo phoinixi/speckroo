@@ -23,4 +23,4 @@ what changed and remind the human to review, then run `/build` again for the
 next task. Repeat until all tasks are checked.
 
 _When you name follow-up commands, match the namespace you were invoked with
-(e.g. `/squad:build` if installed as a plugin)._
+(e.g. `/speckroo:build` if installed as a plugin)._

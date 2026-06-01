@@ -1,10 +1,10 @@
 ---
-description: One-time setup — scaffold the squad framework into the current project.
+description: One-time setup — scaffold the speckroo framework into the current project.
 ---
 
 # /init-framework — bootstrap the framework in this project
 
-Run this once in any project after installing the squad plugin. It copies the
+Run this once in any project after installing the speckroo plugin. It copies the
 bundled masters into this repo so the framework's artifacts live in *your*
 project's git history (the plugin itself is in an ephemeral cache).
 
@@ -29,7 +29,7 @@ Steps:
    project's durable principles (tech constraints, quality bar, out-of-bounds).
    Ask one question at a time; write their answers into the file.
 5. Tell the human they're ready: start a feature with `/discover <idea>`.
-   (If installed as a plugin, commands are namespaced — e.g. `/squad:discover`.)
+   (If installed as a plugin, commands are namespaced — e.g. `/speckroo:discover`.)
 
 This command edits only the project's `.framework/` and `.gitignore`. It creates
 no feature.

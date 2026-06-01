@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// squad CLI — projects the canonical core/ into any tool's config layout.
+// speckroo CLI — projects the canonical core/ into any tool's config layout.
 // One source of truth (core/personas, core/commands, core/workflow.md,
-// squad/.framework masters); every tool's files are generated from it here.
+// speckroo/.framework masters); every tool's files are generated from it here.
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, appendFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -94,7 +94,7 @@ function copilotAgentFM(p) {
   const tools = p.bash ? "['read', 'write', 'edit', 'search', 'shell']" : "['read', 'write', 'edit', 'search']";
   return `---
 name: ${p.key}
-description: squad — ${p.desc}
+description: speckroo — ${p.desc}
 tools: ${tools}
 ---`;
 }
@@ -135,12 +135,12 @@ function vendorFramework(log) {
   // constitution (don't clobber a project's filled-in one)
   const constDst = join(fwDir, "constitution.md");
   if (!existsSync(constDst)) {
-    write(constDst, read("squad/.framework/constitution.md"));
+    write(constDst, read("speckroo/.framework/constitution.md"));
     log.push(".framework/constitution.md");
   }
   // templates
-  for (const f of readdirSync(join(ROOT, "squad/.framework/templates"))) {
-    write(join(fwDir, "templates", f), read(`squad/.framework/templates/${f}`));
+  for (const f of readdirSync(join(ROOT, "speckroo/.framework/templates"))) {
+    write(join(fwDir, "templates", f), read(`speckroo/.framework/templates/${f}`));
   }
   log.push(".framework/templates/ (5)");
   // personas (strip .body)
@@ -205,11 +205,11 @@ function setup(toolKey, isGlobal) {
   }
 
   const dest = isGlobal ? `${HOME}/.config/${toolKey}` : CWD;
-  console.log(`\n✓ squad set up for ${tool.label} in ${dest}\n`);
+  console.log(`\n✓ speckroo set up for ${tool.label} in ${dest}\n`);
   for (const l of log) console.log("  • " + l);
   const hasInitCmd = tool.commands || tool.agentsmd;
   const nextMsg = isGlobal
-    ? `agents and commands are now available in every project.\nUse "squad setup ${toolKey}" in a project to scaffold the framework there.`
+    ? `agents and commands are now available in every project.\nUse "speckroo setup ${toolKey}" in a project to scaffold the framework there.`
     : hasInitCmd
       ? `open this project in ${tool.label}, run the init-framework step,\nthen start a feature with "discover <idea>".`
       : `fill .framework/constitution.md with your project's principles,\nthen ask the agent to "run the discover phase for <idea>".`;
@@ -225,18 +225,18 @@ const arg = positional[1];
 
 if (cmd === "setup") {
   if (!arg) {
-    console.error(`Usage: squad setup <${Object.keys(TOOLS).join("|")}> [--global]`);
+    console.error(`Usage: speckroo setup <${Object.keys(TOOLS).join("|")}> [--global]`);
     process.exit(1);
   }
   setup(arg, isGlobal);
 } else if (cmd === "list") {
   console.log("Supported tools:\n" + Object.entries(TOOLS).map(([k, v]) => `  ${k}  — ${v.label}`).join("\n"));
 } else {
-  console.log(`squad — spec-driven multi-agent dev framework
+  console.log(`speckroo — spec-driven multi-agent dev framework
 
 Usage:
-  squad setup <tool> [--global]   Set up squad for a tool
-  squad list                      List supported tools
+  speckroo setup <tool> [--global]   Set up speckroo for a tool
+  speckroo list                      List supported tools
 
 Options:
   --global, -g    Install agents & commands globally (where supported)

@@ -28,4 +28,4 @@ agent's summary and remind the human to review and run `/approve plan` (flips
 both files) before running `/build`.
 
 _When you name follow-up commands, match the namespace you were invoked with
-(e.g. `/squad:approve` if installed as a plugin)._
+(e.g. `/speckroo:approve` if installed as a plugin)._

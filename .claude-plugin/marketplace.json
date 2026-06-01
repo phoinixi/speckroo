@@ -1,10 +1,10 @@
 {
-  "name": "squad",
-  "owner": { "name": "phoinixi", "url": "https://github.com/phoinixi/squad" },
+  "name": "speckroo",
+  "owner": { "name": "phoinixi", "url": "https://github.com/phoinixi/speckroo" },
   "plugins": [
     {
-      "name": "squad",
-      "source": "./squad",
+      "name": "speckroo",
+      "source": "./speckroo",
       "description": "Project-agnostic multi-agent dev framework: discover -> design -> monetize -> plan -> build, with a human approval gate between every phase."
     }
   ]

@@ -1,8 +1,8 @@
-# squad workflow
+# speckroo workflow
 
-# squad workflow contract
+# speckroo workflow contract
 
-The single source of truth for how the squad workflow behaves, independent of
+The single source of truth for how the speckroo workflow behaves, independent of
 any tool. Every adapter (Claude Code, OpenCode, Copilot, AGENTS.md) implements
 *this* — it is not re-described per tool.
 

@@ -29,4 +29,4 @@ absent `monetization.md` as "skipped." If a draft exists, `/approve monetize`
 can record it as `n/a`.)
 
 _When you name follow-up commands, match the namespace you were invoked with
-(e.g. `/squad:approve` if installed as a plugin)._
+(e.g. `/speckroo:approve` if installed as a plugin)._

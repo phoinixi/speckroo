@@ -1,6 +1,6 @@
 ---
 name: product-designer
-description: squad — Owns UX/UI, user flows, design specs. Drafts design.md.
+description: speckroo — Owns UX/UI, user flows, design specs. Drafts design.md.
 tools: ['read', 'write', 'edit', 'search']
 ---
 

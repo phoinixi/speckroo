@@ -1,6 +1,6 @@
 # status — where each feature stands (read-only; no persona)
 
-Show squad status. If $ARGUMENTS names a slug, show only that feature.
+Show speckroo status. If $ARGUMENTS names a slug, show only that feature.
 
 1. List feature folders under `.framework/` (every directory except `templates`).
    Mark the active feature with ★.

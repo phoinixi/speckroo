@@ -24,4 +24,4 @@ agent's summary and remind the human to review and run `/approve design` before
 moving on (next: `/monetize` if relevant, otherwise `/plan`).
 
 _When you name follow-up commands, match the namespace you were invoked with
-(e.g. `/squad:approve` if installed as a plugin)._
+(e.g. `/speckroo:approve` if installed as a plugin)._

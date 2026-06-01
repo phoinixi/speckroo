@@ -1,7 +1,7 @@
-# Project Constitution — squad
+# Project Constitution — speckroo
 
 > Durable, project-wide principles. **Every agent reads this first**, every phase.
-> This is squad's own constitution — squad is built using squad (dogfooding).
+> This is speckroo's own constitution — speckroo is built using speckroo (dogfooding).
 
 ## Product principles
 - Serve a solo builder or small team using Claude Code who wants disciplined,

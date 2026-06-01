@@ -1,6 +1,6 @@
 ---
 name: software-engineer
-description: squad — Owns architecture, plan, tasks, and code. Drafts plan.md + tasks.md, then builds.
+description: speckroo — Owns architecture, plan, tasks, and code. Drafts plan.md + tasks.md, then builds.
 tools: ['read', 'write', 'edit', 'search', 'shell']
 ---
 
