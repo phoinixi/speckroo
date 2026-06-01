@@ -20,7 +20,7 @@ Works in **Claude Code · OpenCode · Copilot CLI · Cursor · Windsurf · Codex
 
 **Everything else** — one command in your project:
 ```
-npx squad-framework setup <tool>
+npx github:phoinixi/squad setup <tool>
 ```
 `<tool>` is `opencode`, `copilot`, `cursor`, `windsurf`, or `codex`.
 

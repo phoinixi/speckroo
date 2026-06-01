@@ -14,7 +14,7 @@
 
 ## Environment
 - Tool: (Claude Code / OpenCode / Copilot CLI / Cursor / Windsurf / Codex / other)
-- squad version: (from `squad/.claude-plugin/plugin.json` for Claude Code; or run `npx squad-framework --version` for the CLI)
+- squad version: (from `squad/.claude-plugin/plugin.json` for Claude Code; or run `npx github:phoinixi/squad --version` for the CLI)
 - OS:
 
 ## Notes

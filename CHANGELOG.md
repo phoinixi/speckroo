@@ -22,7 +22,7 @@ Initial release.
   (`.claude-plugin/marketplace.json` + `squad/.claude-plugin/plugin.json`).
 - **Multi-tool support.** Canonical source in `core/` (personas, command bodies,
   workflow contract) projected into each tool by a Node CLI
-  (`npx squad-framework setup <tool>`): OpenCode, Copilot CLI, Cursor, Windsurf,
+  (`npx github:phoinixi/squad setup <tool>`): OpenCode, Copilot CLI, Cursor, Windsurf,
   and Codex. CI asserts the Claude plugin's personas stay byte-identical to core.
 - **Universal `AGENTS.md`** — a zero-install driver that runs the workflow in any
   `AGENTS.md`-aware tool (single-agent / degraded mode).

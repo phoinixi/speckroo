@@ -12,7 +12,7 @@ core/                             ← THE source of truth — edit here
   commands/*.md                  8 tool-agnostic command bodies
   workflow.md                    gate / phase / routing contract
 bin/squad.mjs                    CLI: projects core/ into a tool's layout
-package.json                     `npx squad-framework setup <tool>`
+package.json                     `npx github:phoinixi/squad setup <tool>`
 AGENTS.md                        universal zero-install driver
 .claude-plugin/marketplace.json  Claude Code marketplace catalog
 squad/                           Claude Code plugin (native channel)
