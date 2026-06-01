@@ -6,9 +6,12 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, appendFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { homedir } from "node:os";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CWD = process.cwd();
+const HOME = homedir();
+const resolveHome = (p) => p.startsWith("~/") ? join(HOME, p.slice(2)) : p;
 
 // ---- canonical manifest -----------------------------------------------------
 
@@ -40,6 +43,10 @@ const TOOLS = {
     label: "OpenCode",
     agents: { dir: ".opencode/agent", ext: ".md", fm: openCodeAgentFM },
     commands: { dir: ".opencode/command", ext: ".md", fm: openCodeCmdFM },
+    global: {
+      agents: { dir: "~/.config/opencode/agents", ext: ".md", fm: openCodeAgentFM },
+      commands: { dir: "~/.config/opencode/commands", ext: ".md", fm: openCodeCmdFM },
+    },
   },
   copilot: {
     label: "GitHub Copilot CLI",
@@ -155,66 +162,84 @@ function vendorFramework(log) {
 }
 
 // ---- emit tool-specific files -----------------------------------------------
-function setup(toolKey) {
+function setup(toolKey, isGlobal) {
   const tool = TOOLS[toolKey];
   if (!tool) {
     console.error(`Unknown tool "${toolKey}". Supported: ${Object.keys(TOOLS).join(", ")}`);
     process.exit(1);
   }
-  const log = [];
-  vendorFramework(log);
-
-  if (tool.agents) {
-    for (const p of PERSONAS) {
-      const file = join(CWD, tool.agents.dir, p.key + tool.agents.ext);
-      write(file, `${tool.agents.fm(p)}\n\n${personaBody(p.key)}`);
-    }
-    log.push(`${tool.agents.dir}/ (4 agents)`);
+  if (isGlobal && !tool.global) {
+    console.error(`"${toolKey}" does not support global install.`);
+    process.exit(1);
   }
-  if (tool.commands) {
+  const log = [];
+  const base = isGlobal ? resolveHome : (p) => join(CWD, p);
+  const agentsCfg = isGlobal ? tool.global.agents : tool.agents;
+  const commandsCfg = isGlobal ? tool.global.commands : tool.commands;
+
+  if (!isGlobal) vendorFramework(log);
+
+  if (agentsCfg) {
+    for (const p of PERSONAS) {
+      const file = base(join(agentsCfg.dir, p.key + agentsCfg.ext));
+      write(file, `${agentsCfg.fm(p)}\n\n${personaBody(p.key)}`);
+    }
+    log.push(`${agentsCfg.dir}/ (4 agents)`);
+  }
+  if (commandsCfg) {
     for (const c of COMMANDS) {
-      const fm = tool.commands.fm(c);
+      const fm = commandsCfg.fm(c);
       const body = commandBody(c.key);
-      const file = join(CWD, tool.commands.dir, c.key + tool.commands.ext);
+      const file = base(join(commandsCfg.dir, c.key + commandsCfg.ext));
       write(file, fm ? `${fm}\n\n${body}` : body);
     }
-    log.push(`${tool.commands.dir}/ (8 commands)`);
+    log.push(`${commandsCfg.dir}/ (8 commands)`);
   }
-  if (tool.instructions) {
-    // tools with agents but no commands: put the workflow contract in instructions
+  if (!isGlobal && tool.instructions) {
     write(join(CWD, tool.instructions), workflowDoc());
     log.push(tool.instructions);
   }
-  if (tool.agentsmd) {
+  if (!isGlobal && tool.agentsmd) {
     write(join(CWD, "AGENTS.md"), vendorRefs(read("AGENTS.md").trimEnd()));
     log.push("AGENTS.md");
   }
 
-  console.log(`\n✓ squad set up for ${tool.label} in ${CWD}\n`);
+  const dest = isGlobal ? `${HOME}/.config/${toolKey}` : CWD;
+  console.log(`\n✓ squad set up for ${tool.label} in ${dest}\n`);
   for (const l of log) console.log("  • " + l);
   const hasInitCmd = tool.commands || tool.agentsmd;
-  const nextMsg = hasInitCmd
-    ? `open this project in ${tool.label}, run the init-framework step,\nthen start a feature with "discover <idea>".`
-    : `fill .framework/constitution.md with your project's principles,\nthen ask the agent to "run the discover phase for <idea>".`;
+  const nextMsg = isGlobal
+    ? `agents and commands are now available in every project.\nUse "squad setup ${toolKey}" in a project to scaffold the framework there.`
+    : hasInitCmd
+      ? `open this project in ${tool.label}, run the init-framework step,\nthen start a feature with "discover <idea>".`
+      : `fill .framework/constitution.md with your project's principles,\nthen ask the agent to "run the discover phase for <idea>".`;
   console.log(`\nNext: ${nextMsg}\n`);
 }
 
 // ---- arg parsing ------------------------------------------------------------
-const [cmd, arg] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const isGlobal = args.includes("--global") || args.includes("-g");
+const positional = args.filter(a => a !== "--global" && a !== "-g");
+const cmd = positional[0];
+const arg = positional[1];
+
 if (cmd === "setup") {
   if (!arg) {
-    console.error(`Usage: squad setup <${Object.keys(TOOLS).join("|")}>`);
+    console.error(`Usage: squad setup <${Object.keys(TOOLS).join("|")}> [--global]`);
     process.exit(1);
   }
-  setup(arg);
+  setup(arg, isGlobal);
 } else if (cmd === "list") {
   console.log("Supported tools:\n" + Object.entries(TOOLS).map(([k, v]) => `  ${k}  — ${v.label}`).join("\n"));
 } else {
   console.log(`squad — spec-driven multi-agent dev framework
 
 Usage:
-  squad setup <tool>   Set up squad for a tool in the current project
-  squad list           List supported tools
+  squad setup <tool> [--global]   Set up squad for a tool
+  squad list                      List supported tools
+
+Options:
+  --global, -g    Install agents & commands globally (where supported)
 
 Tools: ${Object.keys(TOOLS).join(", ")}
 Claude Code users: install the plugin instead (see README).`);
