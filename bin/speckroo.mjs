@@ -41,8 +41,8 @@ const COMMANDS = [
 const TOOLS = {
   opencode: {
     label: "OpenCode",
-    agents: { dir: ".opencode/agent", ext: ".md", fm: openCodeAgentFM },
-    commands: { dir: ".opencode/command", ext: ".md", fm: openCodeCmdFM },
+    agents: { dir: ".opencode/agents", ext: ".md", fm: openCodeAgentFM },
+    commands: { dir: ".opencode/commands", ext: ".md", fm: openCodeCmdFM },
     global: {
       agents: { dir: "~/.config/opencode/agents", ext: ".md", fm: openCodeAgentFM },
       commands: { dir: "~/.config/opencode/commands", ext: ".md", fm: openCodeCmdFM },

@@ -19,5 +19,5 @@ Example:
   monetization.md  n/a
   plan.md          draft
   tasks.md         draft (0/6 tasks)
-  → next: review plan, then /speckroo:approve plan
+  → next: review plan, then /speckroo-approve plan
 ```

@@ -13,8 +13,8 @@ Steps:
    - `plan` → `plan.md` **and** `tasks.md`
 3. In each target file, replace `> Status: draft` with `> Status: approved`. (For `monetize`, use `n/a` if not applicable.)
 4. Confirm and state next command:
-   - spec → `/speckroo:design` (or `/speckroo:monetize` / `/speckroo:plan`)
-   - design → `/speckroo:monetize` or `/speckroo:plan`
-   - monetize → `/speckroo:plan`
-   - plan → `/speckroo:build`
+   - spec → `/speckroo-design` (or `/speckroo-monetize` / `/speckroo-plan`)
+   - design → `/speckroo-monetize` or `/speckroo-plan`
+   - monetize → `/speckroo-plan`
+   - plan → `/speckroo-build`
 5. Never approve without explicit human say-so. Never run the next phase.

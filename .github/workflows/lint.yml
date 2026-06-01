@@ -30,7 +30,21 @@ jobs:
 
       - name: Assert Claude plugin personas match core canon
         run: |
-          get_body() { awk 'NR==1&&/^---/{f=1;next} f&&/^---/{f=0;next} !f' "$1" | sed '/./,$!d'; }
+          get_body() {
+            raw=$(awk 'NR==1&&/^---/{f=1;next} f&&/^---/{f=0;next} !f' "$1" | sed '/./,$!d')
+            # resolve {file:path} references relative to the agent file's directory
+            dir=$(dirname "$1")
+            resolved=""
+            while IFS= read -r line; do
+              if [[ "$line" =~ \{file:(.+)\} ]]; then
+                ref="$dir/${BASH_REMATCH[1]}"
+                resolved+=$(cat "$ref")
+              else
+                resolved+="$line"$'\n'
+              fi
+            done <<< "$raw"
+            echo -n "$resolved"
+          }
           fail=0
           for name in product-manager product-designer monetization-strategist software-engineer; do
             a=$(get_body "speckroo/agents/$name.md")

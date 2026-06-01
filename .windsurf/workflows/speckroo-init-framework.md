@@ -8,4 +8,4 @@ Steps:
 3. Copy from the source: `constitution.md` → `.framework/constitution.md`, everything in `templates/` → `.framework/templates/`. Skip if `.framework/` already set up.
 4. Append `.framework/.active-feature` to `.gitignore` if missing.
 5. Walk the human through filling `.framework/constitution.md` — ask one question at a time, write their answers.
-6. Done: start a feature with `/speckroo:discover <idea>`.
+6. Done: start a feature with `/speckroo-discover <idea>`.

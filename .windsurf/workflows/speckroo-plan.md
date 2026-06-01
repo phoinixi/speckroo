@@ -8,4 +8,4 @@ Steps:
 3. Seed `.framework/<slug>/plan.md` and `tasks.md` from templates if missing (replace `<feature-slug>` placeholder).
 4. Read `.framework/constitution.md`, then read `core/personas/software-engineer.body.md` and adopt that role in PLAN mode.
 5. Produce `plan.md` + `tasks.md`. Produce ONLY these two files. Do NOT start building.
-6. Return a summary. End with: "plan.md + tasks.md ready for review — when satisfied, run /speckroo:approve plan, then /speckroo:build."
+6. Return a summary. End with: "plan.md + tasks.md ready for review — when satisfied, run /speckroo-approve plan, then /speckroo-build."
