@@ -1,0 +1,46 @@
+{
+  "command": {
+    "speckroo:discover": {
+      "template": "# discover — start a new feature (product-manager → spec.md)\n\nFollow the workflow contract in `.framework/workflow.md`. Idea: $ARGUMENTS\n\n1. Setup check: `.framework/templates/` must exist. If not, stop and tell the\n   human to run `init-framework` first.\n2. Derive a short kebab-case `<feature-slug>` from the idea. Create\n   `.framework/<feature-slug>/` and seed **only** `spec.md` from\n   `.framework/templates/spec.md` (replace the `<feature-slug>` placeholder).\n   Record the slug as the active feature.\n3. Echo `Operating on feature: <feature-slug>`.\n4. Adopt the **product-manager** role (`.framework/personas/product-manager.md`)\n   and fill `.framework/<feature-slug>/spec.md`.\n\nProduce only `spec.md`, then STOP. Tell the human to review it and approve the\nspec before moving to design. Do not start any other phase.",
+      "description": "Phase 1 — Product Manager drafts spec.md.",
+      "agent": "product-manager",
+      "subtask": true
+    },
+    "speckroo:design": {
+      "template": "# design — design the experience (product-designer → design.md)\n\nFollow the workflow contract in `.framework/workflow.md`. Feature: $ARGUMENTS\n(if empty, use the active feature). Echo `Operating on feature: <slug>`.\n\n1. Gate check: `.framework/<slug>/spec.md` must read `> Status: approved`. If\n   missing or still `draft`, STOP and tell the human to approve the spec first.\n2. Seed `.framework/<slug>/design.md` from the template if it does not exist yet.\n3. Adopt the **product-designer** role (`.framework/personas/product-designer.md`)\n   and fill `design.md`.\n\nProduce only `design.md`, then STOP. Tell the human to review and approve it\n(next: monetize if relevant, otherwise plan).",
+      "description": "Phase 2 — Product Designer drafts design.md.",
+      "agent": "product-designer",
+      "subtask": true
+    },
+    "speckroo:monetize": {
+      "template": "# monetize — define the money model (optional; monetization-strategist → monetization.md)\n\nFollow the workflow contract in `.framework/workflow.md`. Feature: $ARGUMENTS\n(if empty, use the active feature). Echo `Operating on feature: <slug>`. Skip\nthis phase entirely for features with no revenue angle.\n\n1. Gate check: `.framework/<slug>/spec.md` must read `> Status: approved`. If\n   missing or still `draft`, STOP and tell the human to approve the spec first.\n2. Seed `.framework/<slug>/monetization.md` from the template if it does not\n   exist yet.\n3. Adopt the **monetization-strategist** role\n   (`.framework/personas/monetization-strategist.md`) and fill `monetization.md`.\n\nProduce only `monetization.md`, then STOP. Tell the human to review and approve\nit (or skip to plan — an absent file means the phase was skipped).",
+      "description": "Phase 3 (optional) — Monetization Strategist drafts monetization.md.",
+      "agent": "monetization-strategist",
+      "subtask": true
+    },
+    "speckroo:plan": {
+      "template": "# plan — architect and break down the work (software-engineer → plan.md + tasks.md)\n\nFollow the workflow contract in `.framework/workflow.md`. Feature: $ARGUMENTS\n(if empty, use the active feature). Echo `Operating on feature: <slug>`.\n\n1. Gate check: `.framework/<slug>/spec.md` must read `> Status: approved` (hard\n   dependency). If `design.md` exists it must be `approved`; if\n   `monetization.md` exists it must be `approved` or `n/a`. Any required\n   artifact missing or `draft` → STOP and tell the human what to approve.\n2. Seed `.framework/<slug>/plan.md` and `tasks.md` from their templates if they\n   do not exist yet.\n3. Adopt the **software-engineer** role in PLAN mode\n   (`.framework/personas/software-engineer.md`) and produce `plan.md` + `tasks.md`.\n\nProduce only `plan.md` + `tasks.md`, then STOP. Tell the human to review and\napprove the plan before build.",
+      "description": "Phase 4 — Software Engineer drafts plan.md + tasks.md.",
+      "agent": "software-engineer",
+      "subtask": true
+    },
+    "speckroo:build": {
+      "template": "# build — implement one task (software-engineer → code)\n\nFollow the workflow contract in `.framework/workflow.md`. Feature: $ARGUMENTS\n(if empty, use the active feature). Echo `Operating on feature: <slug>`.\n\n1. Gate check: both `.framework/<slug>/plan.md` and `tasks.md` must read\n   `> Status: approved`. If either is missing or `draft`, STOP and tell the\n   human to approve the plan first.\n2. Adopt the **software-engineer** role in BUILD mode\n   (`.framework/personas/software-engineer.md`): implement the next unchecked\n   task in `tasks.md` — and ONLY that one task — then check its box and report\n   what changed.\n\nExactly one task per run. Do NOT continue to the next task. Tell the human to\nreview, then run build again for the next task.",
+      "description": "Phase 5 — Software Engineer implements one task, then stops.",
+      "agent": "software-engineer",
+      "subtask": true
+    },
+    "speckroo:approve": {
+      "template": "# approve — record human approval (no persona; orchestration only)\n\nFollow the workflow contract in `.framework/workflow.md`. Arguments: $ARGUMENTS —\nfirst token is the phase (`spec` | `design` | `monetize` | `plan`), optional\nsecond token is the feature slug (else use the active feature). Echo\n`Approving <phase> for feature: <slug>`.\n\nOnly do this when the human has explicitly approved the artifact.\n\nMap the phase to its file(s) under `.framework/<slug>/`:\n- `spec` → `spec.md`\n- `design` → `design.md`\n- `monetize` → `monetization.md`\n- `plan` → `plan.md` **and** `tasks.md` (both together)\n\nIn each file, replace `> Status: draft` with `> Status: approved`. For\n`monetize`, use `> Status: n/a` if the human says it's not applicable.\n\nConfirm what changed and name the next phase. Never approve on the agent's\nbehalf, and never run the next phase yourself.",
+      "description": "Record human approval of a phase so the next may run."
+    },
+    "speckroo:status": {
+      "template": "# status — where each feature stands (read-only; no persona)\n\nShow speckroo status. If $ARGUMENTS names a slug, show only that feature.\n\n1. List feature folders under `.framework/` (every directory except `templates`).\n   Mark the active feature with ★.\n2. For each feature, inspect `spec.md`, `design.md`, `monetization.md`,\n   `plan.md`, `tasks.md` and report each as **missing**, **draft**,\n   **approved**, or **n/a** (read each file's `Status:` line).\n3. For `tasks.md`, also report progress (checked vs total checkboxes).\n4. Render a compact table per feature, then state the next suggested phase\n   based on the first artifact that isn't yet approved.\n\nRead-only. Never edit artifacts.",
+      "description": "Show every feature and its phase status."
+    },
+    "speckroo:init-framework": {
+      "template": "# init-framework — scaffold speckroo into this project (no persona)\n\nOne-time setup. The `speckroo` CLI has already scaffolded `.framework/` masters\n(constitution, templates, personas, workflow) into this project during install —\nthis command finishes setup by filling the constitution.\n\n1. Confirm `.framework/templates/` and `.framework/constitution.md` exist. If\n   not, re-run the speckroo installer for this tool.\n2. Ensure `.gitignore` ignores `.framework/.active-feature` (append if missing).\n3. Walk the human through filling `.framework/constitution.md` with this\n   project's durable principles. Ask one question at a time; write the answers in.\n4. Tell the human they're ready: start a feature with `discover <idea>`.\n\nEdits only `.framework/` and `.gitignore`. Creates no feature.",
+      "description": "One-time setup — finish scaffolding into this project."
+    }
+  }
+}

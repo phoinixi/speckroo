@@ -3,7 +3,7 @@
 // One source of truth (core/personas, core/commands, core/workflow.md,
 // speckroo/.framework masters); every tool's files are generated from it here.
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, appendFileSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, appendFileSync, rmSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
@@ -42,10 +42,21 @@ const TOOLS = {
   opencode: {
     label: "OpenCode",
     agents: { dir: ".opencode/agents", ext: ".md", fm: openCodeAgentFM },
-    commands: { dir: ".opencode/commands/speckroo", ext: ".md", fm: openCodeCmdFM },
+    // OpenCode commands use the config file approach to get speckroo: namespace
+    commands: {
+      type: "json",
+      config: "opencode.json",
+      namespace: "speckroo",
+      legacyDir: ".opencode/commands/speckroo",
+    },
     global: {
       agents: { dir: "~/.config/opencode/agents", ext: ".md", fm: openCodeAgentFM },
-      commands: { dir: "~/.config/opencode/commands/speckroo", ext: ".md", fm: openCodeCmdFM },
+      commands: {
+        type: "json",
+        config: "~/.config/opencode/opencode.jsonc",
+        namespace: "speckroo",
+        legacyDir: "~/.config/opencode/commands/speckroo",
+      },
     },
   },
   copilot: {
@@ -82,12 +93,6 @@ tools:
   grep: true
   glob: true
   bash: ${p.bash}
----`;
-}
-function openCodeCmdFM(c) {
-  const agent = c.agent ? `\nagent: ${c.agent}\nsubtask: true` : "";
-  return `---
-description: ${c.desc}${agent}
 ---`;
 }
 function copilotAgentFM(p) {
@@ -127,6 +132,34 @@ const commandBody = (key) => vendorRefs(read(`core/commands/${key}.md`).trimEnd(
 // ---- the framework contract, rendered for instruction-only tools ------------
 function workflowDoc() {
   return vendorRefs(read("core/workflow.md").trimEnd());
+}
+
+// ---- OpenCode JSON config command writer ------------------------------------
+// OpenCode's `command` config key uses the map key as the slash command name,
+// so { "speckroo:plan": { template, description, agent, subtask } } renders
+// as /speckroo:plan — the colon separator signals a namespaced command.
+
+function stripJsonc(src) {
+  return src.replace(/\/\/[^\n]*/g, "").replace(/\/\*[\s\S]*?\*\//g, "");
+}
+
+function writeOpenCodeJson(configPath, namespace) {
+  let config = {};
+  if (existsSync(configPath)) {
+    try { config = JSON.parse(stripJsonc(readFileSync(configPath, "utf8"))); } catch {}
+  }
+  if (!config.command) config.command = {};
+  // Remove stale entries for this namespace before rewriting
+  for (const key of Object.keys(config.command)) {
+    if (key.startsWith(`${namespace}:`)) delete config.command[key];
+  }
+  for (const c of COMMANDS) {
+    const entry = { template: commandBody(c.key), description: c.desc };
+    if (c.agent) { entry.agent = c.agent; entry.subtask = true; }
+    config.command[`${namespace}:${c.key}`] = entry;
+  }
+  mkdirSync(dirname(configPath), { recursive: true });
+  writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n");
 }
 
 // ---- vendor the shared runtime into the project -----------------------------
@@ -187,13 +220,25 @@ function setup(toolKey, isGlobal) {
     log.push(`${agentsCfg.dir}/ (4 agents)`);
   }
   if (commandsCfg) {
-    for (const c of COMMANDS) {
-      const fm = commandsCfg.fm(c);
-      const body = commandBody(c.key);
-      const file = base(join(commandsCfg.dir, c.key + commandsCfg.ext));
-      write(file, fm ? `${fm}\n\n${body}` : body);
+    if (commandsCfg.type === "json") {
+      const configPath = base(commandsCfg.config);
+      writeOpenCodeJson(configPath, commandsCfg.namespace);
+      log.push(`${commandsCfg.config} (${COMMANDS.length} commands, namespace: ${commandsCfg.namespace})`);
+      // Clean up legacy markdown commands dir if it exists
+      const legacyDir = base(commandsCfg.legacyDir);
+      if (existsSync(legacyDir)) {
+        rmSync(legacyDir, { recursive: true, force: true });
+        log.push(`${commandsCfg.legacyDir}/ (removed legacy)`);
+      }
+    } else {
+      for (const c of COMMANDS) {
+        const fm = commandsCfg.fm(c);
+        const body = commandBody(c.key);
+        const file = base(join(commandsCfg.dir, c.key + commandsCfg.ext));
+        write(file, fm ? `${fm}\n\n${body}` : body);
+      }
+      log.push(`${commandsCfg.dir}/ (8 commands)`);
     }
-    log.push(`${commandsCfg.dir}/ (8 commands)`);
   }
   if (!isGlobal && tool.instructions) {
     write(join(CWD, tool.instructions), workflowDoc());

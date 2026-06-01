@@ -14,6 +14,8 @@ core/                             ← THE source of truth — edit here
 bin/speckroo.mjs                    CLI: projects core/ into a tool's layout
 package.json                     `npx github:phoinixi/speckroo setup <tool>`
 AGENTS.md                        universal zero-install driver
+opencode.json                    OpenCode command config (speckroo: namespace) — generated
+.opencode/agents/                OpenCode subagent personas — generated
 .claude-plugin/marketplace.json  Claude Code marketplace catalog
 speckroo/                           Claude Code plugin (native channel)
   .claude-plugin/plugin.json     bump version on release
@@ -65,6 +67,12 @@ copies.
 `/plugin marketplace add ~/path/to/your/clone`, `/plugin install speckroo@speckroo` —
 then walk `/speckroo:init-framework` → `/speckroo:discover` → `/speckroo:approve` →
 `/speckroo:design` … and confirm each gate behaves.
+
+**OpenCode:** run `node ~/path/to/clone/bin/speckroo.mjs setup opencode --global` once,
+then `cd` into a throwaway project and run `node ~/path/to/clone/bin/speckroo.mjs setup opencode`.
+Open it in OpenCode and walk `/speckroo:init-framework` → `/speckroo:discover` → `/speckroo:approve`
+→ `/speckroo:design` … and confirm each gate behaves. Commands appear with the `:` separator
+because they are written to `opencode.json` under the `command` config key.
 
 **Other tools:** `cd` into a throwaway project and run
 `node ~/path/to/clone/bin/speckroo.mjs setup <tool>`; open it in that tool and walk
