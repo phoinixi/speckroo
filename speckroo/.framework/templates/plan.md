@@ -1,7 +1,7 @@
 # Technical Plan — <feature-slug>
 
 > Owner: **software-engineer** · Phase: `/plan` · Reads: approved `spec.md` (+ `design.md`, `monetization.md` if present)
-> Status: draft   <!-- flipped to "approved" by /approve · do not edit by hand -->
+> Status: draft   <!-- flipped to "approved" on human approval (inline yes or /approve) · do not edit by hand -->
 
 ## Architecture overview
 _How the pieces fit together; a diagram or description._

@@ -5,7 +5,7 @@
     {
       "name": "speckroo",
       "source": "./speckroo",
-      "description": "Project-agnostic multi-agent dev framework: discover -> design -> monetize -> plan -> build, with a human approval gate between every phase."
+      "description": "Project-agnostic multi-agent dev framework. Default: /shape → yes → /plan → yes → /build (2 checkpoints). Granular strict-mode gates available."
     }
   ]
 }

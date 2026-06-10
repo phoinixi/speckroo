@@ -1,7 +1,7 @@
 # Monetization — <feature-slug>
 
 > Owner: **monetization-strategist** · Phase: `/monetize` (optional) · Reads: approved `spec.md` (+ `design.md` if present)
-> Status: draft   <!-- set to "approved" or "n/a" by /approve · do not edit by hand -->
+> Status: draft   <!-- set to "approved" or "n/a" on human approval (inline yes or /approve) · do not edit by hand -->
 
 ## Business model
 _Subscription · usage · one-time · freemium · ads · hybrid — and why._

@@ -1,6 +1,6 @@
 # build — implement tasks (software-engineer → code)
 
-Follow the workflow contract in `core/workflow.md`. Arguments: $ARGUMENTS —
+Follow the workflow contract in `.framework/workflow.md`. Arguments: $ARGUMENTS —
 optional first token `next` selects single-task mode; remaining token (or sole
 token) is the feature slug (else use the active feature). Echo
 `Operating on feature: <slug>`.
@@ -9,7 +9,7 @@ token) is the feature slug (else use the active feature). Echo
    `> Status: approved`. If either is missing or `draft`, STOP and tell the
    human to approve the plan first.
 2. Adopt the **software-engineer** role in BUILD mode
-   (`core/personas/software-engineer.body.md`).
+   (`.framework/personas/software-engineer.md`).
 
 **Default mode** (no `next` argument): implement ALL unchecked tasks in
 `tasks.md` in order. After each task, check its box. If at any point a task

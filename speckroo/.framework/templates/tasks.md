@@ -1,8 +1,8 @@
 # Tasks — <feature-slug>
 
 > Owner: **software-engineer** · Phase: `/plan` → `/build`
-> Status: draft   <!-- flipped to "approved" by /approve (together with plan.md) · do not edit by hand -->
-> `/build` implements exactly ONE unchecked task per run, then stops for review.
+> Status: draft   <!-- flipped to "approved" on human approval (inline yes or /approve, together with plan.md) · do not edit by hand -->
+> `/build` implements all unchecked tasks by default · `/build next` for one-task-at-a-time mode
 
 Each task: small, independently reviewable, traceable to a requirement.
 

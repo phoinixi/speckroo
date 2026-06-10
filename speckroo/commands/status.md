@@ -16,8 +16,11 @@ Steps:
    - **approved** — present, `Status: approved`
    - **n/a** — present, `Status: n/a` (monetization only)
 4. For `tasks.md`, also report task progress (checked vs total checkboxes).
-5. Render a compact table per feature, then state the next suggested command
-   based on the first artifact that isn't yet approved.
+5. Render a compact table per feature, then state the next suggested command.
+   When both `spec.md` and `design.md` are missing or `draft`, suggest `/shape`.
+   When `spec.md` is approved but `design.md` is missing/draft, suggest
+   `/design` (or `/shape <slug>` to resume). Otherwise suggest the next
+   unapproved phase.
 
 Example output:
 
@@ -28,7 +31,7 @@ Example output:
   monetization.md  n/a
   plan.md          draft
   tasks.md         draft (0/6 tasks)
-  → next: review plan, then /approve plan
+  → next: review plan, then approve to build
 ```
 
 Read-only. This command never edits artifacts.

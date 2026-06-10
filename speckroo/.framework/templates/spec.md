@@ -1,7 +1,7 @@
 # Spec — <feature-slug>
 
-> Owner: **product-manager** · Phase: `/discover`
-> Status: draft   <!-- flipped to "approved" by /approve · do not edit by hand -->
+> Owner: **product-manager** · Phase: `/shape` (or `/discover`)
+> Status: draft   <!-- flipped to "approved" on human approval (inline yes or /approve) · do not edit by hand -->
 
 ## Problem & context
 _Who hurts, what's the pain, why now._

@@ -1,8 +1,41 @@
 # Changelog
 
-All notable changes to squad are documented here. Format based on
+All notable changes to speckroo are documented here. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.2.0] — unreleased
+
+### Added
+- `/shape <idea>` — new default Phase 1 command that runs product-manager then
+  product-designer in one pass, producing `spec.md` + `design.md`, then asks for
+  a single combined inline approval before continuing to plan.
+- **Inline approvals.** Every phase command ends with an "Approve and continue?"
+  prompt; a plain "yes" flips `Status: draft → approved` and immediately starts
+  the next phase. `/approve` remains as an explicit fallback.
+- `/approve shape` token — flips both `spec.md` and `design.md` together.
+- **Batch `/build`** (new default): implements all unchecked tasks in order,
+  checks boxes as it goes, ends with one consolidated review summary.
+- `/build next` — explicit single-task mode (the previous default behavior).
+
+### Changed
+- Default flow reduced from 5 phases + 4 `/approve` steps to 3 steps + 2 inline
+  checkpoints: `/shape` → yes → `/plan` → yes → `/build`.
+- `/discover` and `/design` repositioned as granular strict-mode alternatives
+  (still fully functional; no breaking change to existing muscle memory).
+- Personas neutralized: closing messages no longer hardcode next-step commands
+  (the orchestrating command owns that wording).
+- `core/workflow.md` updated with inline-approval rule, shape phase, batch-build
+  discipline, and "Default vs strict mode" section.
+- All templates: updated header comments to reflect inline-approval path.
+- `AGENTS.md`: updated with shape phase, inline-approval gate, batch-build rule.
+- `bin/speckroo.mjs` COMMANDS manifest: added `shape`; updated descriptions;
+  dynamic command count; next-step hints now say `shape <idea>`.
+
+### Migration
+No migration needed. Existing `.framework/<slug>/` dirs with old artifact sets
+work unchanged — same five files, same `Status:` mechanism. Old commands
+(`/discover`, `/design`, `/approve`, `/build next`) all still work.
 
 ## [0.1.0] — unreleased
 

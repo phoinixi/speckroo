@@ -123,20 +123,19 @@
     <div class="install">
       <div class="cmd"><span class="prompt">$</span><code id="c3">npx github:phoinixi/speckroo setup opencode</code><button class="copy" data-target="c3" type="button">copy</button></div>
     </div>
-    <p class="note">Swap <code style="font-family:var(--mono)">opencode</code> for <code style="font-family:var(--mono)">copilot</code>, <code style="font-family:var(--mono)">cursor</code>, <code style="font-family:var(--mono)">windsurf</code>, or <code style="font-family:var(--mono)">codex</code>. Then run the <code style="font-family:var(--mono)">init-framework</code> step and start with <code style="font-family:var(--mono)">discover &lt;idea&gt;</code>.</p>
+    <p class="note">Swap <code style="font-family:var(--mono)">opencode</code> for <code style="font-family:var(--mono)">copilot</code>, <code style="font-family:var(--mono)">cursor</code>, <code style="font-family:var(--mono)">windsurf</code>, or <code style="font-family:var(--mono)">codex</code>. Then run the <code style="font-family:var(--mono)">init-framework</code> step and start with <code style="font-family:var(--mono)">shape &lt;idea&gt;</code>.</p>
   </section>
 
   <section id="workflow">
     <h2><span class="num">02</span>The workflow</h2>
-    <p class="lead">Five phases. Each is one slash command. Nothing auto-chains.</p>
+    <p class="lead">Three steps. Two checkpoints. Each checkpoint is a single "yes".</p>
     <div class="flow">
-      <div class="step"><div class="ph"><span class="slash">/</span>discover</div><div class="out">→ spec.md</div></div>
-      <div class="step"><div class="ph"><span class="slash">/</span>design</div><div class="out">→ design.md</div></div>
-      <div class="step opt"><div class="ph"><span class="slash">/</span>monetize</div><div class="out">→ monetization.md · optional</div></div>
+      <div class="step"><div class="ph"><span class="slash">/</span>shape &lt;idea&gt;</div><div class="out">→ spec.md + design.md</div></div>
       <div class="step"><div class="ph"><span class="slash">/</span>plan</div><div class="out">→ plan.md + tasks.md</div></div>
-      <div class="step"><div class="ph"><span class="slash">/</span>build</div><div class="out">→ code, one task at a time</div></div>
+      <div class="step opt"><div class="ph"><span class="slash">/</span>monetize</div><div class="out">→ monetization.md · optional</div></div>
+      <div class="step"><div class="ph"><span class="slash">/</span>build</div><div class="out">→ code, all tasks, one summary</div></div>
     </div>
-    <p class="gateline">Between every phase you review the artifact and run <b>/approve</b> — which flips its <b>Status: draft</b> line to <b>approved</b>. The next phase refuses to run until it does.</p>
+    <p class="gateline">After each phase the agent asks <b>"Approve and continue?"</b> — a "yes" flips <b>Status: draft → approved</b> and starts the next phase. The <b>/approve</b> command is still available as an explicit fallback.</p>
   </section>
 
   <section id="agents">

@@ -1,7 +1,7 @@
 # Design — <feature-slug>
 
-> Owner: **product-designer** · Phase: `/design` · Reads: approved `spec.md`
-> Status: draft   <!-- flipped to "approved" by /approve · do not edit by hand -->
+> Owner: **product-designer** · Phase: `/shape` (or `/design`) · Reads: approved `spec.md` (or same-run draft in `/shape`)
+> Status: draft   <!-- flipped to "approved" on human approval (inline yes or /approve) · do not edit by hand -->
 
 ## User flows
 _Step-by-step primary flows, including entry and exit points._

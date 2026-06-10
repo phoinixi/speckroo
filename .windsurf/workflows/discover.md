@@ -1,6 +1,10 @@
+---
+description: Granular Phase 1a — Product Manager drafts spec.md (use shape for the default flow).
+---
+
 # discover — start a new feature spec (granular alternative to /shape)
 
-Follow the workflow contract in `core/workflow.md`. Idea: $ARGUMENTS
+Follow the workflow contract in `.framework/workflow.md`. Idea: $ARGUMENTS
 
 Use `/shape` for the default two-artifact flow. Use `/discover` when you want
 to draft and review `spec.md` alone before moving to design.
@@ -12,7 +16,7 @@ to draft and review `spec.md` alone before moving to design.
    `.framework/templates/spec.md` (replace the `<feature-slug>` placeholder).
    Record the slug as the active feature.
 3. Echo `Operating on feature: <feature-slug>`.
-4. Adopt the **product-manager** role (`core/personas/product-manager.body.md`)
+4. Adopt the **product-manager** role (`.framework/personas/product-manager.md`)
    and fill `.framework/<feature-slug>/spec.md`.
 
 Produce only `spec.md`, then return a summary and end with:

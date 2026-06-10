@@ -1,3 +1,7 @@
+---
+description: One-time setup — finish scaffolding into this project.
+---
+
 # init-framework — scaffold speckroo into this project (no persona)
 
 One-time setup. The `speckroo` CLI has already scaffolded `.framework/` masters

@@ -23,12 +23,13 @@ const PERSONAS = [
 ];
 
 const COMMANDS = [
-  { key: "discover", desc: "Phase 1 — Product Manager drafts spec.md.", agent: "product-manager" },
-  { key: "design", desc: "Phase 2 — Product Designer drafts design.md.", agent: "product-designer" },
-  { key: "monetize", desc: "Phase 3 (optional) — Monetization Strategist drafts monetization.md.", agent: "monetization-strategist" },
-  { key: "plan", desc: "Phase 4 — Software Engineer drafts plan.md + tasks.md.", agent: "software-engineer" },
-  { key: "build", desc: "Phase 5 — Software Engineer implements one task, then stops.", agent: "software-engineer" },
-  { key: "approve", desc: "Record human approval of a phase so the next may run.", agent: null },
+  { key: "shape", desc: "Default Phase 1 — PM + Designer draft spec.md + design.md together, then continue to plan.", agent: null },
+  { key: "discover", desc: "Granular Phase 1a — Product Manager drafts spec.md (use shape for the default flow).", agent: "product-manager" },
+  { key: "design", desc: "Granular Phase 1b — Product Designer drafts design.md from an approved spec.", agent: "product-designer" },
+  { key: "monetize", desc: "Optional phase — Monetization Strategist drafts monetization.md.", agent: "monetization-strategist" },
+  { key: "plan", desc: "Phase 2 — Software Engineer drafts plan.md + tasks.md.", agent: "software-engineer" },
+  { key: "build", desc: "Phase 3 — Software Engineer implements all tasks (or one with 'next'), then summarizes.", agent: "software-engineer" },
+  { key: "approve", desc: "Explicit fallback — record human approval of a phase so the next may run.", agent: null },
   { key: "status", desc: "Show every feature and its phase status.", agent: null },
   { key: "init-framework", desc: "One-time setup — finish scaffolding into this project.", agent: null },
 ];
@@ -237,7 +238,7 @@ function setup(toolKey, isGlobal) {
         const file = base(join(commandsCfg.dir, c.key + commandsCfg.ext));
         write(file, fm ? `${fm}\n\n${body}` : body);
       }
-      log.push(`${commandsCfg.dir}/ (8 commands)`);
+      log.push(`${commandsCfg.dir}/ (${COMMANDS.length} commands)`);
     }
   }
   if (!isGlobal && tool.instructions) {
@@ -256,8 +257,8 @@ function setup(toolKey, isGlobal) {
   const nextMsg = isGlobal
     ? `agents and commands are now available in every project.\nUse "speckroo setup ${toolKey}" in a project to scaffold the framework there.`
     : hasInitCmd
-      ? `open this project in ${tool.label}, run the init-framework step,\nthen start a feature with "discover <idea>".`
-      : `fill .framework/constitution.md with your project's principles,\nthen ask the agent to "run the discover phase for <idea>".`;
+      ? `open this project in ${tool.label}, run the init-framework step,\nthen start a feature with "shape <idea>".`
+      : `fill .framework/constitution.md with your project's principles,\nthen ask the agent to "shape <idea>".`;
   console.log(`\nNext: ${nextMsg}\n`);
 }
 

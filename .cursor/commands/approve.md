@@ -1,6 +1,6 @@
 # approve — explicit fallback: record human approval (no persona; orchestration only)
 
-Follow the workflow contract in `core/workflow.md`. Arguments: $ARGUMENTS —
+Follow the workflow contract in `.framework/workflow.md`. Arguments: $ARGUMENTS —
 first token is the phase (`spec` | `design` | `shape` | `monetize` | `plan`),
 optional second token is the feature slug (else use the active feature). Echo
 `Approving <phase> for feature: <slug>`.

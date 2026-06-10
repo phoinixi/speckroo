@@ -2,7 +2,7 @@
 
 **Spec-driven dev with four agents, and you in the loop.**
 
-Four role-based agents — PM, designer, monetization strategist, engineer — hand off through reviewable Markdown artifacts. No phase moves forward until you approve it.
+Four role-based agents — PM, designer, monetization strategist, engineer — hand off through reviewable Markdown artifacts. By default, two checkpoints; each one is a single "yes".
 
 Works in **Claude Code · OpenCode · Copilot CLI · Cursor · Windsurf · Codex** · and any `AGENTS.md` tool.
 
@@ -28,29 +28,39 @@ npx github:phoinixi/speckroo setup <tool>
 
 ## The workflow
 
+**Default (3 steps, 2 checkpoints):**
 ```
-/discover <idea>    → spec.md          ↓ /approve spec
-/design             → design.md        ↓ /approve design
-/monetize           → monetization.md  ↓ /approve monetize   (optional)
-/plan               → plan.md + tasks  ↓ /approve plan
-/build              → code             ↺ one task at a time
+/shape <idea>   → spec.md + design.md   ↓ "yes"
+/plan           → plan.md + tasks.md    ↓ "yes"
+/build          → code (all tasks, one summary)
+```
+
+Each checkpoint is an inline "yes" — no separate command needed. The next phase starts immediately.
+
+**Strict mode** (granular, every phase explicit):
+```
+/discover <idea>  → spec.md          ↓ /approve spec
+/design           → design.md        ↓ /approve design
+/monetize         → monetization.md  ↓ /approve monetize   (optional)
+/plan             → plan.md + tasks  ↓ /approve plan
+/build next       → code             ↺ one task at a time
 ```
 
 `/status` shows where every feature stands.  
-`/approve` flips `Status: draft → approved` in the artifact — the next phase won't run until it does.
+`/approve` is the explicit fallback for approvals — the normal path is an inline "yes".
 
 ---
 
 ## How it's built
 
-One canonical source in [`core/`](./core) — four persona bodies, eight command bodies, one workflow contract — projected into each tool's config layout by the CLI. The Claude Code plugin is byte-checked against `core/` by CI.
+One canonical source in [`core/`](./core) — four persona bodies, nine command bodies, one workflow contract — projected into each tool's config layout by the CLI. The Claude Code plugin is byte-checked against `core/` by CI.
 
 ```
 core/personas/          ← 4 role prompts, written once
-core/commands/          ← 8 command bodies, written once
+core/commands/          ← 9 command bodies, written once
 core/workflow.md        ← gate rules, written once
-bin/speckroo.mjs           ← projects core/ into any tool
-speckroo/                  ← the Claude Code plugin
+bin/speckroo.mjs        ← projects core/ into any tool
+speckroo/               ← the Claude Code plugin
 docs/                   ← GitHub Pages site
 AGENTS.md               ← universal fallback (no install needed)
 ```

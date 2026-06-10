@@ -18,11 +18,9 @@ RULES:
 - No solutioning: describe the need, not the implementation.
 - Mark unknowns as explicit open questions rather than guessing.
 - Keep every requirement testable and uniquely numbered.
-- Leave the `> Status:` line as `draft`. Only the human, via `/approve`, may set
+- Leave the `> Status:` line as `draft`. Only explicit human approval may set
   it to `approved`.
 
-WHEN DONE: you cannot pause mid-run for human input — instead, finish by writing
-the file, then return a 3–5 bullet summary plus any open questions that need a
-human decision. End your message with: "spec.md ready for review — when
-satisfied, run /approve spec, then /design." Do not begin any other phase; the
-human runs the next command.
+WHEN DONE: finish by writing the file, then return a 3–5 bullet summary plus
+any open questions that need a human decision. Do not begin any other phase;
+the orchestrating command handles what happens next.

@@ -9,7 +9,7 @@ in a generated adapter.**
 ```
 core/                             ← THE source of truth — edit here
   personas/*.body.md             4 role prompts (no frontmatter)
-  commands/*.md                  8 tool-agnostic command bodies
+  commands/*.md                  9 tool-agnostic command bodies
   workflow.md                    gate / phase / routing contract
 bin/speckroo.mjs                    CLI: projects core/ into a tool's layout
 package.json                     `npx github:phoinixi/speckroo setup <tool>`
@@ -32,16 +32,16 @@ copies.
 
 ## The rules that must not break
 
-1. **No phase auto-chains.** A command produces its artifact and stops. It must
-   never run the next phase. The human is the gate.
+1. **No silent auto-chaining.** Continuation requires an explicit human "yes" to
+   the end-of-phase prompt (or `/approve`). No phase may start without it.
 2. **One owner per artifact.** Each agent writes only its own file and never
    edits another phase's artifact.
 3. **Every template keeps its gate line.** Each file in
    `speckroo/.framework/templates/` must contain a `> Status: draft` line — the
-   `/approve` command flips it to `approved`, and the phase gates check for it.
-   CI fails if a template loses this line.
-4. **Agents never self-approve.** Only the human, via `/approve`, sets a
-   `Status` to `approved` (or `n/a` for monetization).
+   gate mechanism checks for it. CI fails if a template loses this line.
+4. **Agents never self-approve.** Only explicit human approval (inline "yes" to
+   the end-of-phase prompt, or `/approve`) may set a `Status` to `approved` (or
+   `n/a` for monetization). Ambiguity or silence is never consent.
 5. **Docs match files.** If you change a command, agent, or template, update the
    README and `docs/` so claims stay true.
 
@@ -65,14 +65,17 @@ copies.
 
 **Claude Code plugin:** install your local copy in a throwaway project —
 `/plugin marketplace add ~/path/to/your/clone`, `/plugin install speckroo@speckroo` —
-then walk `/speckroo:init-framework` → `/speckroo:discover` → `/speckroo:approve` →
-`/speckroo:design` … and confirm each gate behaves.
+then walk `/speckroo:init-framework` → `/speckroo:shape <idea>` → answer "yes" →
+answer "yes" → confirm both gates flip only after the "yes", build runs all tasks,
+one summary produced. Then verify strict mode: `/speckroo:discover` still stops
+waiting, `/speckroo:approve spec` still works, `/speckroo:build next` does exactly
+one task.
 
 **OpenCode:** run `node ~/path/to/clone/bin/speckroo.mjs setup opencode --global` once,
 then `cd` into a throwaway project and run `node ~/path/to/clone/bin/speckroo.mjs setup opencode`.
-Open it in OpenCode and walk `/speckroo:init-framework` → `/speckroo:discover` → `/speckroo:approve`
-→ `/speckroo:design` … and confirm each gate behaves. Commands appear with the `:` separator
-because they are written to `opencode.json` under the `command` config key.
+Open it in OpenCode and walk the same flow with `/speckroo:init-framework` →
+`/speckroo:shape <idea>` … Commands appear with the `:` separator because they
+are written to `opencode.json` under the `command` config key.
 
 **Other tools:** `cd` into a throwaway project and run
 `node ~/path/to/clone/bin/speckroo.mjs setup <tool>`; open it in that tool and walk

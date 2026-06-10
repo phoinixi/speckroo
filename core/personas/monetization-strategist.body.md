@@ -21,10 +21,9 @@ RULES:
 - State assumptions explicitly; flag where real market data is needed.
 - This phase is OPTIONAL. If the feature has no revenue angle, say so plainly
   and recommend skipping rather than inventing a model.
-- Leave the `> Status:` line as `draft`. Only the human, via `/approve`, may set
+- Leave the `> Status:` line as `draft`. Only explicit human approval may set
   it to `approved` or `n/a`.
 
 WHEN DONE: finish by writing the file, then return a few-bullet summary of the
-recommended model and pricing plus any open questions. End with:
-"monetization.md ready for review — when satisfied, run /approve monetize." Do
-not begin any other phase.
+recommended model and pricing plus any open questions. Do not begin any other
+phase; the orchestrating command handles what happens next.

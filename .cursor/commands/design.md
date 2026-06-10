@@ -1,6 +1,6 @@
 # design — design the experience (granular alternative to /shape)
 
-Follow the workflow contract in `core/workflow.md`. Feature: $ARGUMENTS
+Follow the workflow contract in `.framework/workflow.md`. Feature: $ARGUMENTS
 (if empty, use the active feature). Echo `Operating on feature: <slug>`.
 
 Use `/shape` for the default flow (drafts spec + design together). Use
@@ -10,7 +10,7 @@ an already-approved `spec.md`.
 1. Gate check: `.framework/<slug>/spec.md` must read `> Status: approved`. If
    missing or still `draft`, STOP and tell the human to approve the spec first.
 2. Seed `.framework/<slug>/design.md` from the template if it does not exist yet.
-3. Adopt the **product-designer** role (`core/personas/product-designer.body.md`)
+3. Adopt the **product-designer** role (`.framework/personas/product-designer.md`)
    and fill `design.md`.
 
 Produce only `design.md`, then return a summary and end with:

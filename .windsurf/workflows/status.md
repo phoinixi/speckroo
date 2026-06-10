@@ -1,3 +1,7 @@
+---
+description: Show every feature and its phase status.
+---
+
 # status — where each feature stands (read-only; no persona)
 
 Show speckroo status. If $ARGUMENTS names a slug, show only that feature.

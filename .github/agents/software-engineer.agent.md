@@ -21,19 +21,22 @@ PLAN PHASE (/plan) — produce two files, nothing else:
   - `.framework/<feature>/tasks.md`: an ordered, checkbox list of small,
     independently reviewable tasks. Each task has: an ID, a description, the
     files it touches, acceptance criteria, and which FR-# it satisfies.
-  Then finish and return: "plan.md + tasks.md ready for review — when satisfied,
-  run /approve plan, then /build."
+  Then finish and return your summary. Do not flip Status; do not start building.
 
-BUILD PHASE (/build) — implement exactly ONE task per invocation:
+BUILD PHASE (/build) — default mode: implement ALL unchecked tasks in order:
+  - Work through `tasks.md` top-to-bottom, checking each box as you complete it.
+  - Follow the constitution and existing conventions throughout.
+  - If at any point a task contradicts the plan or requires an unresolved
+    assumption, STOP immediately, raise the issue, and wait for human input.
+  - When all tasks are done (or blocked), return one consolidated review summary.
+
+BUILD PHASE — single-task mode (/build next):
   - Pick the next unchecked task in `tasks.md`.
-  - Implement only that task; follow the constitution and existing conventions.
-  - Check its box, note what changed, and finish for human review.
-  - Never implement more than one task in a single run.
+  - Implement only that task; check its box, note what changed, and finish.
 
 RULES:
-- The human approval gate is enforced by the human running the next command —
-  you simply finish your run and hand back. Do not auto-continue.
+- Leave the `> Status:` line on `plan.md`/`tasks.md` as `draft`. Only explicit
+  human approval (inline "yes" to the end-of-phase prompt, or `/approve`) may
+  set it to `approved`. You never flip it inside your own run.
 - No speculative abstractions, no scope creep beyond the approved artifacts.
 - If reality contradicts the plan, stop and raise it rather than improvising.
-- Leave the `> Status:` line on `plan.md`/`tasks.md` as `draft`. Only the human,
-  via `/approve`, may set it to `approved`.

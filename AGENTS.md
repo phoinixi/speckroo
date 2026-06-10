@@ -12,27 +12,44 @@ through Markdown files in `.framework/`, not through chat — so even without
 subagents or slash commands, the workflow works: you write an artifact, the
 human approves it, you read it back in the next phase.
 
+## Default flow (2 checkpoints)
+
+```
+shape <idea>  → spec.md + design.md   ↓ human "yes"
+plan          → plan.md + tasks.md    ↓ human "yes"
+build         → all tasks, one summary
+```
+
+**Strict mode** (granular, every phase explicit): discover → approve spec →
+design → approve design → (optional) monetize → approve monetize → plan →
+approve plan → build next (one task at a time)
+
 ## How the human drives it (no slash commands needed)
 
-The human will say things like "run discover for <idea>", "do the design phase",
-"approve the spec", "build the next task". Map those to the phases below. When a
-phase starts, **read the matching role file in `core/personas/` and adopt it as
-your operating instructions for that phase.**
+The human will say things like "shape <idea>", "run plan", "build everything",
+or the strict-mode equivalents. Map those to the phases below. When a phase
+starts, **read the matching role file in `core/personas/` and adopt it as your
+operating instructions for that phase.**
 
-## Phases (in order)
+## Phases
 
 | When the human asks for… | You become… | You produce | Requires |
 |---|---|---|---|
-| discover / spec | product-manager | `.framework/<slug>/spec.md` | — |
-| design | product-designer | `.framework/<slug>/design.md` | approved `spec.md` |
-| monetize *(optional)* | monetization-strategist | `.framework/<slug>/monetization.md` | approved `spec.md` |
-| plan | software-engineer | `.framework/<slug>/plan.md` + `tasks.md` | approved `spec.md` |
-| build | software-engineer | code, ONE task at a time | approved `plan.md` + `tasks.md` |
+| **shape** *(default)* | product-manager, then product-designer | `spec.md` + `design.md` | — |
+| discover *(granular)* | product-manager | `spec.md` | — |
+| design *(granular)* | product-designer | `design.md` | approved `spec.md` |
+| monetize *(optional)* | monetization-strategist | `monetization.md` | approved `spec.md` |
+| plan | software-engineer | `plan.md` + `tasks.md` | approved `spec.md` |
+| build | software-engineer | code, all tasks | approved `plan.md` + `tasks.md` |
 
 For each phase: read `.framework/constitution.md` and the required upstream
 artifact(s), then read `core/personas/<role>.body.md` and follow it exactly.
 Seed the artifact from `.framework/templates/<artifact>.md` if it doesn't exist
 yet (replace the `<feature-slug>` placeholder). Write **only your own** artifact.
+
+For the **shape** phase: adopt product-manager, write `spec.md`, then adopt
+product-designer and write `design.md` (you may read the fresh-draft `spec.md` —
+the human's "shape" request is consent to draft both in one pass).
 
 ## The approval gate — read carefully
 
@@ -40,17 +57,18 @@ yet (replace the `<feature-slug>` placeholder). Write **only your own** artifact
 - **Do not begin a phase until its required upstream artifacts read
   `> Status: approved`** (monetization may read `n/a`). If not, STOP and tell the
   human exactly what to review and approve.
-- **NEVER set an artifact's Status to `approved` yourself.** Only flip
-  `draft` → `approved` when the human explicitly says they approve it (e.g. "I
-  approve the spec"). This guardrail is what keeps the human in the loop; in this
-  single-agent mode there is no command enforcing it, so you must honor it
-  strictly. When in doubt, leave it `draft` and ask.
+- After completing a phase, ask: **"Approve and continue to <next>? (yes / revise / stop)"**
+- **Flip `Status: draft` → `approved` only on an explicit, unqualified "yes" from
+  the human in the current exchange.** Ambiguous or qualified responses are NOT
+  approval. Never flip on your own initiative or assume consent from silence.
 
 ## Build discipline
 
-In the build phase, implement **exactly one** unchecked task from `tasks.md`,
-check its box, report what changed, and STOP for review. Do not continue to the
-next task until the human asks again.
+- **Default** (`build`): implement ALL unchecked tasks in `tasks.md` in order,
+  checking each box as you go. Stop early only if blocked by a contradicted
+  assumption. End with one consolidated review summary.
+- **Single-task** (`build next`): implement exactly one unchecked task, check
+  its box, report what changed, and STOP for review.
 
 ## Setup in a new project
 
@@ -58,7 +76,7 @@ If `.framework/` doesn't exist here, create it and copy in `constitution.md` and
 `templates/` (and, for this universal mode, `core/personas/` + `core/workflow.md`
 so they're available locally). Fill `constitution.md` with this project's
 durable principles before starting. Add `.framework/.active-feature` to
-`.gitignore`.
+`.gitignore`. Then start a feature with "shape <idea>".
 
 ## Roles in one line each (full contracts in `core/personas/`)
 

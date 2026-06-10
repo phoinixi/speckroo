@@ -28,8 +28,8 @@ Steps:
 4. Walk the human through filling `.framework/constitution.md` with this
    project's durable principles (tech constraints, quality bar, out-of-bounds).
    Ask one question at a time; write their answers into the file.
-5. Tell the human they're ready: start a feature with `/discover <idea>`.
-   (If installed as a plugin, commands are namespaced — e.g. `/speckroo:discover`.)
+5. Tell the human they're ready: start a feature with `/shape <idea>`.
+   (If installed as a plugin, commands are namespaced — e.g. `/speckroo:shape`.)
 
 This command edits only the project's `.framework/` and `.gitignore`. It creates
 no feature.
