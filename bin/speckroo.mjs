@@ -20,15 +20,18 @@ const PERSONAS = [
   { key: "product-designer", desc: "Owns UX/UI, user flows, design specs. Drafts design.md.", bash: false },
   { key: "monetization-strategist", desc: "Owns pricing, business model, revenue. Drafts monetization.md (optional).", bash: false },
   { key: "software-engineer", desc: "Owns architecture, plan, tasks, and code. Drafts plan.md + tasks.md, then builds.", bash: true },
+  { key: "code-reviewer", desc: "Adversarially verifies finished builds against spec — spots drift, gaps, and bugs. Writes review.md.", bash: true },
 ];
 
 const COMMANDS = [
+  { key: "loop", desc: "Autonomous coordinator — processes features from queue.md, stops at the two human approval gates.", agent: null },
   { key: "shape", desc: "Default Phase 1 — PM + Designer draft spec.md + design.md together, then continue to plan.", agent: null },
   { key: "discover", desc: "Granular Phase 1a — Product Manager drafts spec.md (use shape for the default flow).", agent: "product-manager" },
   { key: "design", desc: "Granular Phase 1b — Product Designer drafts design.md from an approved spec.", agent: "product-designer" },
   { key: "monetize", desc: "Optional phase — Monetization Strategist drafts monetization.md.", agent: "monetization-strategist" },
   { key: "plan", desc: "Phase 2 — Software Engineer drafts plan.md + tasks.md.", agent: "software-engineer" },
   { key: "build", desc: "Phase 3 — Software Engineer implements all tasks (or one with 'next'), then summarizes.", agent: "software-engineer" },
+  { key: "review", desc: "Phase 4 — Code Reviewer adversarially checks the build against spec. Writes review.md.", agent: "code-reviewer" },
   { key: "approve", desc: "Explicit fallback — record human approval of a phase so the next may run.", agent: null },
   { key: "status", desc: "Show every feature and its phase status.", agent: null },
   { key: "init-framework", desc: "One-time setup — finish scaffolding into this project.", agent: null },
@@ -173,15 +176,28 @@ function vendorFramework(log) {
     log.push(".framework/constitution.md");
   }
   // templates
-  for (const f of readdirSync(join(ROOT, "speckroo/.framework/templates"))) {
+  const templateFiles = readdirSync(join(ROOT, "speckroo/.framework/templates"));
+  for (const f of templateFiles) {
     write(join(fwDir, "templates", f), read(`speckroo/.framework/templates/${f}`));
   }
-  log.push(".framework/templates/ (5)");
+  log.push(`.framework/templates/ (${templateFiles.length})`);
   // personas (strip .body)
   for (const p of PERSONAS) {
     write(join(fwDir, "personas", `${p.key}.md`), personaBody(p.key));
   }
-  log.push(".framework/personas/ (4)");
+  log.push(`.framework/personas/ (${PERSONAS.length})`);
+  // queue (don't clobber project's queue)
+  const queueDst = join(fwDir, "queue.md");
+  if (!existsSync(queueDst)) {
+    write(queueDst, read("speckroo/.framework/queue.md"));
+    log.push(".framework/queue.md");
+  }
+  // skill (don't clobber accumulated skills)
+  const skillDst = join(fwDir, "skill.md");
+  if (!existsSync(skillDst)) {
+    write(skillDst, read("speckroo/.framework/skill.md"));
+    log.push(".framework/skill.md");
+  }
   // workflow contract
   write(join(fwDir, "workflow.md"), workflowDoc());
   log.push(".framework/workflow.md");
@@ -218,7 +234,7 @@ function setup(toolKey, isGlobal) {
       const file = base(join(agentsCfg.dir, p.key + agentsCfg.ext));
       write(file, `${agentsCfg.fm(p)}\n\n${personaBody(p.key)}`);
     }
-    log.push(`${agentsCfg.dir}/ (4 agents)`);
+    log.push(`${agentsCfg.dir}/ (${PERSONAS.length} agents)`);
   }
   if (commandsCfg) {
     if (commandsCfg.type === "json") {

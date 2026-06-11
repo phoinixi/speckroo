@@ -1,8 +1,8 @@
 # speckroo
 
-**Spec-driven dev with four agents, and you in the loop.**
+**Spec-driven dev with five agents, and you in the loop.**
 
-Four role-based agents — PM, designer, monetization strategist, engineer — hand off through reviewable Markdown artifacts. By default, two checkpoints; each one is a single "yes".
+Five role-based agents — PM, designer, monetization strategist, engineer, reviewer — hand off through reviewable Markdown artifacts. By default, two checkpoints and a fully autonomous loop.
 
 Works in **Claude Code · OpenCode · Copilot CLI · Cursor · Windsurf · Codex** · and any `AGENTS.md` tool.
 
@@ -28,14 +28,22 @@ npx github:phoinixi/speckroo setup <tool>
 
 ## The workflow
 
-**Default (3 steps, 2 checkpoints):**
+**Default (3 steps + auto review, 2 checkpoints):**
 ```
 /shape <idea>   → spec.md + design.md   ↓ "yes"
 /plan           → plan.md + tasks.md    ↓ "yes"
 /build          → code (all tasks, one summary)
+/review         → review.md (adversarial check, informational)
 ```
 
-Each checkpoint is an inline "yes" — no separate command needed. The next phase starts immediately.
+Each checkpoint is an inline "yes". `/review` chains automatically — no prompt needed.
+
+**Loop mode** (queue-driven, autonomous between gates):
+```
+# add ideas to .framework/queue.md, then:
+/loop           → run next feature in the queue, stop at approval gates
+/loop check     → inspect queue state without running anything
+```
 
 **Strict mode** (granular, every phase explicit):
 ```
@@ -53,12 +61,12 @@ Each checkpoint is an inline "yes" — no separate command needed. The next phas
 
 ## How it's built
 
-One canonical source in [`core/`](./core) — four persona bodies, nine command bodies, one workflow contract — projected into each tool's config layout by the CLI. The Claude Code plugin is byte-checked against `core/` by CI.
+One canonical source in [`core/`](./core) — five persona bodies, eleven command bodies, one workflow contract — projected into each tool's config layout by the CLI. The Claude Code plugin is byte-checked against `core/` by CI.
 
 ```
-core/personas/          ← 4 role prompts, written once
-core/commands/          ← 9 command bodies, written once
-core/workflow.md        ← gate rules, written once
+core/personas/          ← 5 role prompts, written once
+core/commands/          ← 11 command bodies, written once
+core/workflow.md        ← gate rules + loop + skill contract, written once
 bin/speckroo.mjs        ← projects core/ into any tool
 speckroo/               ← the Claude Code plugin
 docs/                   ← GitHub Pages site

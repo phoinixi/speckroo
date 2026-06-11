@@ -18,7 +18,12 @@ human approves it, you read it back in the next phase.
 shape <idea>  → spec.md + design.md   ↓ human "yes"
 plan          → plan.md + tasks.md    ↓ human "yes"
 build         → all tasks, one summary
+review        → review.md (auto-chained, informational)
 ```
+
+**Loop mode** (fully autonomous between gates):
+Add ideas to `.framework/queue.md`, say "loop" — the agent processes each
+feature through the full pipeline, stopping only at the two "yes" gates.
 
 **Strict mode** (granular, every phase explicit): discover → approve spec →
 design → approve design → (optional) monetize → approve monetize → plan →
@@ -27,9 +32,9 @@ approve plan → build next (one task at a time)
 ## How the human drives it (no slash commands needed)
 
 The human will say things like "shape <idea>", "run plan", "build everything",
-or the strict-mode equivalents. Map those to the phases below. When a phase
-starts, **read the matching role file in `core/personas/` and adopt it as your
-operating instructions for that phase.**
+"loop", or the strict-mode equivalents. Map those to the phases below. When a
+phase starts, **read the matching role file in `core/personas/` and adopt it as
+your operating instructions for that phase.**
 
 ## Phases
 
@@ -41,6 +46,7 @@ operating instructions for that phase.**
 | monetize *(optional)* | monetization-strategist | `monetization.md` | approved `spec.md` |
 | plan | software-engineer | `plan.md` + `tasks.md` | approved `spec.md` |
 | build | software-engineer | code, all tasks | approved `plan.md` + `tasks.md` |
+| review *(informational)* | code-reviewer | `review.md` | all tasks checked |
 
 For each phase: read `.framework/constitution.md` and the required upstream
 artifact(s), then read `core/personas/<role>.body.md` and follow it exactly.
@@ -66,17 +72,26 @@ the human's "shape" request is consent to draft both in one pass).
 
 - **Default** (`build`): implement ALL unchecked tasks in `tasks.md` in order,
   checking each box as you go. Stop early only if blocked by a contradicted
-  assumption. End with one consolidated review summary.
+  assumption. End with one consolidated review summary. Append new discoveries
+  to `.framework/skill.md` before finishing.
 - **Single-task** (`build next`): implement exactly one unchecked task, check
   its box, report what changed, and STOP for review.
 
+## Skill accumulation
+
+`.framework/skill.md` (project-level, not per-feature) stores accumulated
+conventions, gotchas, and patterns discovered during builds. Every role reads
+it before starting a phase; the software-engineer appends new learnings after
+each build. It grows richer over time — each feature benefits from the last.
+
 ## Setup in a new project
 
-If `.framework/` doesn't exist here, create it and copy in `constitution.md` and
-`templates/` (and, for this universal mode, `core/personas/` + `core/workflow.md`
-so they're available locally). Fill `constitution.md` with this project's
-durable principles before starting. Add `.framework/.active-feature` to
-`.gitignore`. Then start a feature with "shape <idea>".
+If `.framework/` doesn't exist here, create it and copy in `constitution.md`,
+`templates/`, `queue.md`, and `skill.md` (and, for this universal mode,
+`core/personas/` + `core/workflow.md` so they're available locally). Fill
+`constitution.md` with this project's durable principles before starting. Add
+`.framework/.active-feature` to `.gitignore`. Then start a feature with
+"shape <idea>", or add ideas to `queue.md` and say "loop".
 
 ## Roles in one line each (full contracts in `core/personas/`)
 
@@ -84,3 +99,4 @@ durable principles before starting. Add `.framework/.active-feature` to
 - **product-designer** — UX, flows, design specs → `design.md`
 - **monetization-strategist** — pricing, business model (optional) → `monetization.md`
 - **software-engineer** — architecture, plan, tasks, code → `plan.md`, `tasks.md`, code
+- **code-reviewer** — adversarial verification of the finished build → `review.md`

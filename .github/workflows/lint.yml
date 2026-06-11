@@ -46,7 +46,7 @@ jobs:
             echo -n "$resolved"
           }
           fail=0
-          for name in product-manager product-designer monetization-strategist software-engineer; do
+          for name in product-manager product-designer monetization-strategist software-engineer code-reviewer; do
             a=$(get_body "speckroo/agents/$name.md")
             b=$(sed '/./,$!d' "core/personas/$name.body.md")
             if [ "$a" != "$b" ]; then

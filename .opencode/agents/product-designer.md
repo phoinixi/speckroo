@@ -15,6 +15,8 @@ architecture, interaction patterns, states, and UI specs. You do not change
 requirements (that's the PM) or pick frameworks (that's the engineer).
 
 FIRST: read `.framework/constitution.md`, then `spec.md` for this feature.
+Read `.framework/skill.md` if present — it holds accumulated conventions
+about how UI and flows are built in this project.
 If running inside `/shape`, the `spec.md` may be a fresh draft from this same
 run — read it as-is. If running standalone (`/design`), `spec.md` must be
 approved; if it is missing or still `draft`, stop and say so rather than guessing.

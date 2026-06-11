@@ -29,6 +29,7 @@ is opt-in; the default is the three-step flow above.
 | monetize *(optional)* | monetization-strategist | `monetization.md` | approved `spec.md` |
 | plan | software-engineer | `plan.md`, `tasks.md` | approved `spec.md` (+ `design.md`/`monetization.md` if present) |
 | build | software-engineer | code | approved `plan.md` + `tasks.md` |
+| review *(informational)* | code-reviewer | `review.md` | all tasks checked in `tasks.md` |
 
 Artifacts live in `.framework/<feature-slug>/`. Agents hand off through these
 files — never through chat or live agent state. Each persona reads the
@@ -85,6 +86,36 @@ not flip; return control to the human.
 - `/build next [slug]` implements exactly **one** unchecked task, checks its
   box, reports what changed, and stops for review. Use this for careful
   step-by-step review.
+
+## Loop mode
+
+`/loop` processes a queue of features autonomously, chaining phases and
+stopping only at the two human approval gates.
+
+```
+/loop           → process next item from .framework/queue.md
+/loop check     → inspect queue state, run nothing
+/loop <slug>    → process a specific feature only, then stop
+```
+
+`.framework/queue.md` (project-level) is a checklist of feature ideas. The
+loop picks the first unchecked item, runs: shape → waits for approval → plan
+→ waits for approval → build → review → marks item done → picks next.
+
+The same approval gate rules apply inside the loop as in standalone commands:
+only an explicit, unqualified "yes" in the current exchange may flip a Status
+or advance a phase. The loop cannot self-approve.
+
+## Skill accumulation
+
+`.framework/skill.md` (project-level) stores conventions, gotchas, and
+patterns discovered during builds. Every persona reads it before starting a
+phase; the software-engineer appends new learnings after each build. This file
+is seeded empty by `init-framework` and grows richer over time — making each
+subsequent feature faster and better-aligned to the project's evolving
+standards.
+
+It is not a gate artifact: no phase requires it, and it may be edited freely.
 
 ## Fidelity note across tools
 

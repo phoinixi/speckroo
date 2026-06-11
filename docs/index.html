@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>speckroo — spec-driven dev with four agents, and you in the loop</title>
-<meta name="description" content="speckroo is a reusable, project-agnostic multi-agent development framework for Claude Code, OpenCode, Copilot, Cursor, Windsurf, Codex, and any AGENTS.md tool. Spec → design → plan → build, with you approving every phase.">
+<title>speckroo — spec-driven dev with five agents, and you in the loop</title>
+<meta name="description" content="speckroo is a reusable, project-agnostic multi-agent development framework for Claude Code, OpenCode, Copilot, Cursor, Windsurf, Codex, and any AGENTS.md tool. Spec → design → plan → build → review, autonomous loop with two human checkpoints.">
 <style>
   :root {
     --bg: #0d1117; --panel: #161b22; --line: #232a33;
@@ -95,8 +95,8 @@
     <div class="badges">
       <span>multi-tool</span><span>·</span><span>MIT</span><span>·</span><span>zero-config</span>
     </div>
-    <h1>Spec-driven dev with <span class="hl">four agents</span>, and you in the loop.</h1>
-    <p class="sub">speckroo is a reusable, project-agnostic development framework. A product manager, designer, monetization strategist, and engineer hand off through reviewable Markdown artifacts — and no phase moves forward until <em>you</em> approve it.</p>
+    <h1>Spec-driven dev with <span class="hl">five agents</span>, and you in the loop.</h1>
+    <p class="sub">speckroo is a reusable, project-agnostic development framework. A product manager, designer, monetization strategist, engineer, and reviewer hand off through reviewable Markdown artifacts — with a fully autonomous loop between your two approval checkpoints.</p>
     <p class="works">Runs in</p>
     <ul class="tools">
       <li>Claude Code</li>
@@ -128,29 +128,41 @@
 
   <section id="workflow">
     <h2><span class="num">02</span>The workflow</h2>
-    <p class="lead">Three steps. Two checkpoints. Each checkpoint is a single "yes".</p>
+    <p class="lead">Three steps. Two checkpoints. Autonomous loop between them.</p>
     <div class="flow">
       <div class="step"><div class="ph"><span class="slash">/</span>shape &lt;idea&gt;</div><div class="out">→ spec.md + design.md</div></div>
       <div class="step"><div class="ph"><span class="slash">/</span>plan</div><div class="out">→ plan.md + tasks.md</div></div>
       <div class="step opt"><div class="ph"><span class="slash">/</span>monetize</div><div class="out">→ monetization.md · optional</div></div>
       <div class="step"><div class="ph"><span class="slash">/</span>build</div><div class="out">→ code, all tasks, one summary</div></div>
+      <div class="step"><div class="ph"><span class="slash">/</span>review</div><div class="out">→ review.md · auto-chained</div></div>
     </div>
-    <p class="gateline">After each phase the agent asks <b>"Approve and continue?"</b> — a "yes" flips <b>Status: draft → approved</b> and starts the next phase. The <b>/approve</b> command is still available as an explicit fallback.</p>
+    <p class="gateline">After each phase the agent asks <b>"Approve and continue?"</b> — a "yes" flips <b>Status: draft → approved</b> and starts the next phase. <b>/review</b> chains automatically after build. The <b>/approve</b> command is still available as an explicit fallback.</p>
+  </section>
+
+  <section id="loop">
+    <h2><span class="num">03</span>Loop mode</h2>
+    <p class="lead">Add ideas to a queue. Let the loop do the rest — stopping only when a human decision is needed.</p>
+    <div class="install">
+      <div class="cmd"><span class="prompt">&gt;</span><code id="c4">/loop</code><button class="copy" data-target="c4" type="button">copy</button></div>
+    </div>
+    <p class="note">Populate <code style="font-family:var(--mono)">.framework/queue.md</code> with feature ideas. <b>/loop</b> picks the first unchecked item and runs it through shape → plan → build → review, pausing at the two "yes" gates. When a feature is done its box is checked and the loop moves to the next. <b>/loop check</b> shows the current state of all queued features without running anything.</p>
+    <p class="note">A project-level <code style="font-family:var(--mono)">skill.md</code> accumulates conventions and gotchas discovered during builds — every agent reads it before starting a phase, and the engineer appends to it after every build. The loop gets smarter with each feature.</p>
   </section>
 
   <section id="agents">
-    <h2><span class="num">03</span>The four agents</h2>
+    <h2><span class="num">04</span>The five agents</h2>
     <p class="lead">One owner per phase. Each writes only its own artifact.</p>
     <div class="agents">
       <div class="agent"><h3>Product Manager</h3><p class="owns">Requirements, scope, priorities, success metrics.</p><span class="art">spec.md</span></div>
       <div class="agent"><h3>Product Designer</h3><p class="owns">UX, user flows, design specs.</p><span class="art">design.md</span></div>
       <div class="agent"><h3>Monetization Strategist</h3><p class="owns">Pricing, business model, revenue. Optional.</p><span class="art">monetization.md</span></div>
       <div class="agent"><h3>Software Engineer</h3><p class="owns">Architecture, plan, task breakdown, code.</p><span class="art">plan.md · tasks.md · code</span></div>
+      <div class="agent"><h3>Code Reviewer</h3><p class="owns">Adversarial verification of the finished build. Finds drift, gaps, and bugs.</p><span class="art">review.md</span></div>
     </div>
   </section>
 
   <section id="why">
-    <h2><span class="num">04</span>Why four agents, not one?</h2>
+    <h2><span class="num">05</span>Why five agents, not one?</h2>
     <div class="why">
       <p>A single mega-agent loses the thread across a long build. speckroo's agents hand off through files in <code style="font-family:var(--mono)">.framework/</code>, not chat history — so context persists across phases, each role stays tight and accountable, and you have a reviewable paper trail at every checkpoint. This very site was built by running speckroo on itself; the artifacts live in <code style="font-family:var(--mono)">.framework/speckroo-docs/</code>.</p>
     </div>

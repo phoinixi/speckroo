@@ -4,6 +4,44 @@ All notable changes to speckroo are documented here. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — unreleased
+
+### Added
+- **`/loop`** — autonomous phase coordinator. Reads `.framework/queue.md`,
+  chains shape → plan → build → review, and stops only at the two human
+  approval gates. `/loop check` inspects queue state without running anything;
+  `/loop <slug>` targets a single feature.
+- **`/review`** — adversarial build verification. A new `code-reviewer` persona
+  reads the finished build against spec/design/plan and writes `review.md` with
+  structured findings (✗ blockers / ⚠ warnings / ✓ notes). Informational —
+  does not block the pipeline. Auto-chained by `/loop` after every build.
+- **`queue.md`** — project-level feature backlog (`.framework/queue.md`).
+  A checklist of feature ideas; `/loop` picks the first unchecked item.
+  Seeded by `init-framework` and the CLI setup command.
+- **`skill.md`** — project-level skill accumulator (`.framework/skill.md`).
+  Every persona reads it before starting a phase; the software-engineer
+  appends new learnings after each build. Makes each subsequent feature
+  faster and better-aligned to project conventions.
+- `code-reviewer` persona body (`core/personas/code-reviewer.body.md`) and
+  matching plugin agent (`speckroo/agents/code-reviewer.md`). Added to
+  PERSONAS manifest — generated for all tool adapters.
+
+### Changed
+- All personas now read `.framework/skill.md` at the start of each phase.
+- Software-engineer persona appends discoveries to `skill.md` after each build.
+- `init-framework` command now seeds `queue.md` and `skill.md` alongside
+  `constitution.md`.
+- `bin/speckroo.mjs`: persona and template counts are now dynamic (no more
+  hardcoded `(4)`/`(5)` in log output).
+- CI lint now checks `code-reviewer` persona sync alongside the other four.
+- `core/workflow.md`: added Loop mode and Skill accumulation sections.
+- Review phase row added to the phases table in `core/workflow.md` and `AGENTS.md`.
+
+### Migration
+No migration needed. Existing feature dirs and workflows are unaffected.
+New files (`queue.md`, `skill.md`) are seeded by `init-framework` or on next
+`setup` run; they are not required for existing flows to continue working.
+
 ## [0.2.0] — unreleased
 
 ### Added

@@ -23,12 +23,18 @@ Steps:
        → `${CLAUDE_PROJECT_DIR}/.framework/templates/`
    Do not overwrite files that already exist — if `.framework/` is already set
    up, say so and stop.
-3. Ensure `.gitignore` in the project root ignores
+3. Seed the project-level runtime files if they do not exist:
+   - `${CLAUDE_PLUGIN_ROOT}/.framework/queue.md`
+       → `${CLAUDE_PROJECT_DIR}/.framework/queue.md`
+   - `${CLAUDE_PLUGIN_ROOT}/.framework/skill.md`
+       → `${CLAUDE_PROJECT_DIR}/.framework/skill.md`
+4. Ensure `.gitignore` in the project root ignores
    `.framework/.active-feature` (append the line if missing).
-4. Walk the human through filling `.framework/constitution.md` with this
+5. Walk the human through filling `.framework/constitution.md` with this
    project's durable principles (tech constraints, quality bar, out-of-bounds).
    Ask one question at a time; write their answers into the file.
-5. Tell the human they're ready: start a feature with `/shape <idea>`.
+6. Tell the human they're ready: start a feature with `/shape <idea>`, or add
+   ideas to `queue.md` and run `/loop` to process the queue automatically.
    (If installed as a plugin, commands are namespaced — e.g. `/speckroo:shape`.)
 
 This command edits only the project's `.framework/` and `.gitignore`. It creates

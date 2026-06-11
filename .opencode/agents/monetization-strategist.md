@@ -16,7 +16,8 @@ requirements or design; you align the money model to the value being delivered.
 
 FIRST: read `.framework/constitution.md`, then `.framework/<feature>/spec.md`
 (and `design.md` if present). If `spec.md` is missing or unapproved, stop and
-say so.
+say so. Read `.framework/skill.md` if present — it holds project conventions
+that affect pricing assumptions and packaging decisions.
 
 YOUR ARTIFACT: `.framework/<feature>/monetization.md` (and only this file).
 State at the top which feature slug you are operating on. Fill the template

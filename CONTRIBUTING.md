@@ -8,9 +8,9 @@ in a generated adapter.**
 
 ```
 core/                             ← THE source of truth — edit here
-  personas/*.body.md             4 role prompts (no frontmatter)
-  commands/*.md                  9 tool-agnostic command bodies
-  workflow.md                    gate / phase / routing contract
+  personas/*.body.md             5 role prompts (no frontmatter)
+  commands/*.md                  11 tool-agnostic command bodies
+  workflow.md                    gate / phase / loop / skill contract
 bin/speckroo.mjs                    CLI: projects core/ into a tool's layout
 package.json                     `npx github:phoinixi/speckroo setup <tool>`
 AGENTS.md                        universal zero-install driver
@@ -21,7 +21,7 @@ speckroo/                           Claude Code plugin (native channel)
   .claude-plugin/plugin.json     bump version on release
   agents/                        CC personas — bodies MUST equal core/ (CI-checked)
   commands/                      CC commands (Task-tool dispatch)
-  .framework/{constitution.md, templates/}   masters the CLI vendors
+  .framework/{constitution.md, templates/, queue.md, skill.md}   masters the CLI vendors
 docs/                            zero-build GitHub Pages site
 .framework/speckroo-docs/           speckroo's own design record (worked example)
 ```
@@ -67,9 +67,11 @@ copies.
 `/plugin marketplace add ~/path/to/your/clone`, `/plugin install speckroo@speckroo` —
 then walk `/speckroo:init-framework` → `/speckroo:shape <idea>` → answer "yes" →
 answer "yes" → confirm both gates flip only after the "yes", build runs all tasks,
-one summary produced. Then verify strict mode: `/speckroo:discover` still stops
-waiting, `/speckroo:approve spec` still works, `/speckroo:build next` does exactly
-one task.
+one summary produced. Then verify: `/speckroo:review` produces `review.md`; add
+an idea to `queue.md` and run `/speckroo:loop` to confirm it picks up the item
+and stops at the approval gates. Then verify strict mode: `/speckroo:discover`
+still stops waiting, `/speckroo:approve spec` still works, `/speckroo:build next`
+does exactly one task.
 
 **OpenCode:** run `node ~/path/to/clone/bin/speckroo.mjs setup opencode --global` once,
 then `cd` into a throwaway project and run `node ~/path/to/clone/bin/speckroo.mjs setup opencode`.
