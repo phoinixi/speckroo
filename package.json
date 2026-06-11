@@ -1,6 +1,6 @@
 {
   "name": "speckroo-framework",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Spec-driven multi-agent dev framework. One command sets it up for Claude Code, OpenCode, Copilot, Cursor, Windsurf, Codex, and any AGENTS.md tool.",
   "type": "module",
   "bin": {
