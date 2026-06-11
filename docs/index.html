@@ -123,7 +123,7 @@
     <div class="install">
       <div class="cmd"><span class="prompt">$</span><code id="c3">npx github:phoinixi/speckroo setup opencode</code><button class="copy" data-target="c3" type="button">copy</button></div>
     </div>
-    <p class="note">Swap <code style="font-family:var(--mono)">opencode</code> for <code style="font-family:var(--mono)">copilot</code>, <code style="font-family:var(--mono)">cursor</code>, <code style="font-family:var(--mono)">windsurf</code>, or <code style="font-family:var(--mono)">codex</code>. Then run the <code style="font-family:var(--mono)">init-framework</code> step and start with <code style="font-family:var(--mono)">shape &lt;idea&gt;</code>.</p>
+    <p class="note">Swap <code style="font-family:var(--mono)">opencode</code> for <code style="font-family:var(--mono)">copilot</code>, <code style="font-family:var(--mono)">cursor</code>, <code style="font-family:var(--mono)">windsurf</code>, or <code style="font-family:var(--mono)">codex</code>. Then run <code style="font-family:var(--mono)">init-framework</code> to scaffold your project, add ideas to <code style="font-family:var(--mono)">.framework/queue.md</code>, and run <code style="font-family:var(--mono)">loop</code>.</p>
   </section>
 
   <section id="workflow">
@@ -145,8 +145,10 @@
     <div class="install">
       <div class="cmd"><span class="prompt">&gt;</span><code id="c4">/loop</code><button class="copy" data-target="c4" type="button">copy</button></div>
     </div>
-    <p class="note">Populate <code style="font-family:var(--mono)">.framework/queue.md</code> with feature ideas. <b>/loop</b> picks the first unchecked item and runs it through shape → plan → build → review, pausing at the two "yes" gates. When a feature is done its box is checked and the loop moves to the next. <b>/loop check</b> shows the current state of all queued features without running anything.</p>
-    <p class="note">A project-level <code style="font-family:var(--mono)">skill.md</code> accumulates conventions and gotchas discovered during builds — every agent reads it before starting a phase, and the engineer appends to it after every build. The loop gets smarter with each feature.</p>
+    <p class="note">Add ideas to <code style="font-family:var(--mono)">.framework/queue.md</code> — one checkbox per feature. Run <b>/loop</b> and it picks the first unchecked item, runs shape (PM + designer), then stops:</p>
+    <div class="gateline" style="margin-top:12px"><b>"Approve shape and continue to /plan? (yes / revise / stop)"</b></div>
+    <p class="note" style="margin-top:12px">Say <b>yes</b> → engineer plans → stops again → say <b>yes</b> → engineer builds everything → code reviewer writes <code style="font-family:var(--mono)">review.md</code> → feature box checked → loop picks the next idea. <b>Two decisions from you per feature.</b></p>
+    <p class="note"><b>/loop check</b> shows all queued features and their current phase without running anything. A project-level <code style="font-family:var(--mono)">skill.md</code> accumulates conventions after each build — every agent reads it, so the loop gets smarter over time.</p>
   </section>
 
   <section id="agents">

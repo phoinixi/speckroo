@@ -26,6 +26,48 @@ npx github:phoinixi/speckroo setup <tool>
 
 ---
 
+## Quick start (Claude Code)
+
+**1. Install and scaffold:**
+```
+/plugin marketplace add phoinixi/speckroo
+/plugin install speckroo@speckroo
+/speckroo:init-framework
+```
+`init-framework` walks you through filling `.framework/constitution.md` with your project's principles, and seeds `queue.md` + `skill.md`.
+
+**2. Add feature ideas to the queue** (`.framework/queue.md`):
+```markdown
+- [ ] user authentication
+- [ ] dashboard charts
+- [ ] CSV export
+```
+
+**3. Run the loop:**
+```
+/speckroo:loop
+```
+
+The agent picks "user authentication", runs the PM and designer, then stops:
+
+> Approve shape (spec.md + design.md) and continue to /plan? (yes / revise / stop)
+
+Say **yes** → the engineer plans and stops again:
+
+> Approve plan and continue to /build? (yes / revise / stop)
+
+Say **yes** → the engineer builds all tasks → the code reviewer writes `review.md` → "user authentication" is checked off → the loop picks "dashboard charts".
+
+**That's it. Two decisions per feature.**
+
+If you want to target a single feature without using the queue:
+```
+/speckroo:shape user authentication
+```
+Same inline approval flow, just for that one feature.
+
+---
+
 ## The workflow
 
 **Default (3 steps + auto review, 2 checkpoints):**
