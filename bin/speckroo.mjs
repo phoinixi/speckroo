@@ -80,7 +80,8 @@ const TOOLS = {
   },
   codex: {
     label: "Codex CLI",
-    agentsmd: true, // AGENTS.md only — Codex has no subagents / native commands
+    agentsmd: true,
+    skill: ".agents/skills/speckroo/SKILL.md",
   },
 };
 
@@ -264,6 +265,10 @@ function setup(toolKey, isGlobal) {
   if (!isGlobal && tool.agentsmd) {
     write(join(CWD, "AGENTS.md"), vendorRefs(read("AGENTS.md").trimEnd()));
     log.push("AGENTS.md");
+  }
+  if (!isGlobal && tool.skill) {
+    write(join(CWD, tool.skill), read("core/codex/SKILL.md"));
+    log.push(`${tool.skill} (Codex workflow skill)`);
   }
 
   const dest = isGlobal ? `${HOME}/.config/${toolKey}` : CWD;
